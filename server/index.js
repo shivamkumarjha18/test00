@@ -27,6 +27,7 @@ const OfficePurchaseRoute = require("./Routes/OfficePurchaseRoute");
 const ImpDocumentRoute = require("./Routes/ImpDocumentRoute");
 const CLientRoute = require("./Routes/ClientRoute");
 const morgan = require("morgan");
+const cors = require("cors");
 
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
@@ -42,6 +43,10 @@ mongoose
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.static(path.join(__dirname, 'dist')));
+
+
+// cors for cross origins 
+app.use(cors());
 
 // Add this catch-all route at the END of your routes (after all API routes)
 app.get('*', (req, res) => {
