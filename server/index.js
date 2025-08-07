@@ -40,7 +40,14 @@ mongoose
 // ---------Routes----------
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use("dist")
+
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Add this catch-all route at the END of your routes (after all API routes)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 
 app.use("/api", require("./Routes/upload"));
 app.use("/api/leadSource", LeadSourceRoute);
