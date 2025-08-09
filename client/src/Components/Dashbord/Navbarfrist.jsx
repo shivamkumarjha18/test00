@@ -184,35 +184,33 @@ const Navbarfristn = () => {
                     {/* Task Master */}
                     <div className="col-md-4">
                       <h6 className="text-danger">Suspect</h6>
-                    
-
-                      <Dropdown.Item as={Link} to="/add-suspect-lead">
-                        Add Suspect Lead
+                      <Dropdown.Item as={Link} to="/suspect">
+                        Suspect List
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="">
+                      <Dropdown.Item as={Link} to="/suspect/add">
+                        Add Suspect
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/import-lead">
                         Import Lead
-                      </Dropdown.Item>
-                        <Dropdown.Item as={Link} to="/website-download">
-                        Website Download
                       </Dropdown.Item>
                     </div>
                     <div className="col-md-4">
-                      <h6 className="text-danger">Prosect</h6>
-                      <Dropdown.Item as={Link} to="/add-prospect-lead">
-                        Add Prospect Lead
+                      <h6 className="text-danger">Prospect</h6>
+                      <Dropdown.Item as={Link} to="/prospect">
+                        Prospect List
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/customer-detail">
-                        Customer Detail
+                      <Dropdown.Item as={Link} to="/prospect/add">
+                        Add Prospect
                       </Dropdown.Item>
                     </div>
 
                     <div className="col-md-4">
                       <h6 className="text-danger">Customer</h6>
                       <Dropdown.Item as={Link} to="/client">
-                        Client
+                        Client List
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/client-form">
-                        first client form
+                      <Dropdown.Item as={Link} to="/client/add">
+                        Add Client
                       </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/kyc">
                         KYC

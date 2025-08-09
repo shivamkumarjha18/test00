@@ -1,149 +1,124 @@
-
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
 const API_URL = "/client";
 
-// 🔹 Step 1: Create Client First Form
-export const createClientFirstForm = createAsyncThunk(
-  "createClientFirstForm/create",
-  async (formData, { rejectWithValue }) => {
+export const createClient = createAsyncThunk(
+  "client/create",
+  async (clientData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/client-first-form`,
-        formData
-      );
-      console.log("first");
-
+      const response = await axios.post(`${API_URL}/create`, clientData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-
-
-
-
-export const updateClientFirstForm = createAsyncThunk(
-  "clientFirstForm/update",
-  async ({ id, formData }, { rejectWithValue }) => {
-    try {
-      const response = await axios.put(
-        `${API_URL}/client-first-form/${id}`,
-        formData
-      );
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
-);
-
-export const fetchByidClientFirstForm = createAsyncThunk(
-  "clientFirstForm/fetchById",
-  async ({ id }, { rejectWithValue }) => {
-    console.log("Fetching Client First Form by ID:", id);
-    try {
-      const response = await axios.get(`${API_URL}/${id}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
-);
-// get by id
-export const fetchByidCompleteForm = createAsyncThunk(
-  "clientcompleteForm/fetchById",
-  async (id, { rejectWithValue }) => {
-    console.log("Fetching Client complete Form by ID:", id);
-    try {
-      const response = await axios.get(`${API_URL}/${id}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
-);
-
-
-// 🔹 Step 2: Complete Client Form
-export const completeClientForm = createAsyncThunk(
-  "client/completeClientForm",
-  async (formData, { rejectWithValue }) => {
-    try {
-      console.log("Complete Client Form Data:", formData);
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const response = await axios.post(
-        `${API_URL}/add-client`,
-        formData,
-        config
-      );
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
-);
-
-
-// 🔹 Fetch all full clients
-export const getAllFullClients = createAsyncThunk(
-  "client/getAllFullClients",
+export const getAllClients = createAsyncThunk(
+  "client/getAll",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/all`);
       return response.data.clients;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-// ClientThunx.js
-export const updateAddClientForm = createAsyncThunk(
-  "client/updateAddClientForm",
-  async ({ id, formData }, { rejectWithValue }) => {
-    try {
-      const response = await axios.put(`${API_URL}/add-client/${id}`, formData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
-);
-
-export const deleteAddClientForm = createAsyncThunk(
-  "client/deleteAddClientForm",
+export const getClientById = createAsyncThunk(
+  "client/getById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`${API_URL}/add-client/${id}`);
-      return { id, message: response.data.message };
+      const response = await axios.get(`${API_URL}/${id}`);
+      return response.data.client;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-// Update status of a lead
-export const updateClientLeadStatus = createAsyncThunk(
-  "ClientLead/updateStatus",
-  async ({ id, status }, thunkAPI) => {
+export const addFamilyMemberToClient = createAsyncThunk(
+  "client/addFamilyMember",
+  async ({ clientId, familyMembers }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_URL}/status/${id}`, { status });
+      const response = await axios.put(`${API_URL}/add/family/${clientId}`, familyMembers);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
+export const addFinancialInfoToClient = createAsyncThunk(
+  "client/addFinancialInfo",
+  async ({ clientId, financialInfo }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/add/financialinfo/${clientId}`, financialInfo);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
+export const addFuturePrioritiesToClient = createAsyncThunk(
+  "client/addFuturePriorities",
+  async ({ clientId, futurePriorities }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/add/futurepriorities/${clientId}`, futurePriorities);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
+export const addProposedPlanToClient = createAsyncThunk(
+  "client/addProposedPlan",
+  async ({ clientId, proposedPlan }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/add/proposedplan/${clientId}`, proposedPlan);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
+export const updateClientPersonalDetails = createAsyncThunk(
+  "client/updatePersonalDetails",
+  async ({ clientId, personalDetails }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/update/personaldetails/${clientId}`, { personalDetails });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const deleteClient = createAsyncThunk(
+  "client/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${API_URL}/delete/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const updateClientStatus = createAsyncThunk(
+    "client/updateStatus",
+    async ({ id, status }, { rejectWithValue }) => {
+        try {
+            const response = await axios.put(`${API_URL}/update/status/${id}`, { status });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);

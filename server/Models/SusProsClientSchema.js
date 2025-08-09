@@ -368,18 +368,42 @@ const proposedPlanSchema = new mongoose.Schema({
 
 const personalDetailsSchema = new mongoose.Schema({
   groupCode: String,
-  groupName: String,
+  groupName: {
+    type: String,
+    required: function () {
+      const parent = this.ownerDocument();
+      return ['prospect', 'suspect'].includes(parent.status);
+    },
+  },
   gender: String,
-  salutation: String,
+  salutation: {
+    type: String,
+    required: function () {
+      const parent = this.ownerDocument();
+      return ['prospect', 'suspect'].includes(parent.status);
+    },
+  },
   organisation: String,
   designation: String,
   annualIncome: String,
   grade: Number,
   familyHead: String,
-  mobileNo: Number,
+  mobileNo: {
+    type: Number,
+    required: function () {
+      const parent = this.ownerDocument();
+      return ['prospect', 'suspect'].includes(parent.status);
+    },
+  },
   contactNo: Number,
   whatsappNo: Number,
-  emailId: String,
+  emailId: {
+    type: String,
+    required: function () {
+      const parent = this.ownerDocument();
+      return ['prospect', 'suspect'].includes(parent.status);
+    },
+  },
   paName: String,
   paMobileNo: Number,
   adharNumber: String,
@@ -406,7 +430,13 @@ const personalDetailsSchema = new mongoose.Schema({
   leadOccupationType: String,
   occupation: String,
   callingPurpose: String,
-  name: String,
+  name: {
+    type: String,
+    required: function () {
+      const parent = this.ownerDocument();
+      return ['prospect', 'suspect'].includes(parent.status);
+    },
+  },
   allocatedCRE: String,
   remark: String,
   pincode: Number,

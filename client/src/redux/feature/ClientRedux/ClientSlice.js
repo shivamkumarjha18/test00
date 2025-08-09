@@ -1,140 +1,102 @@
-
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  createClientFirstForm,
-  completeClientForm,
-  getAllFullClients,
-  updateAddClientForm,
-  deleteAddClientForm,
-  fetchByidCompleteForm,
-} from "./ClientThunx";
+import * as thunks from "./ClientThunx";
 
 const initialState = {
+  clients: [],
+  currentClient: null,
   loading: false,
   error: null,
-  success: false,
-  clients: [],
-  client: null,
-  step: 1,
 };
 
 const clientSlice = createSlice({
   name: "client",
   initialState,
   reducers: {
-    resetClientState: (state) => {
-      state.loading = false;
-      state.error = null;
-      state.success = false;
-      state.step = 1;
+    clearCurrentClient: (state) => {
+      state.currentClient = null;
     },
   },
   extraReducers: (builder) => {
-    // 🔹 Step 1: Client First Form
     builder
-      .addCase(createClientFirstForm.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      // Create Client
+      .addCase(thunks.createClient.fulfilled, (state, action) => {
+        state.clients.push(action.payload);
+        state.currentClient = action.payload;
       })
-      .addCase(createClientFirstForm.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.client = action.payload;
-        state.clients.unshift(action.payload);
-        state.step = 2;
-      })
-      .addCase(createClientFirstForm.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-
-    // 🔹 Step 2: Complete AddClientForm
-    builder
-      .addCase(completeClientForm.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(completeClientForm.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.clients.unshift(action.payload);
-      })
-      .addCase(completeClientForm.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-
-    // 🔹 Get all clients
-    builder
-      .addCase(getAllFullClients.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getAllFullClients.fulfilled, (state, action) => {
-        state.loading = false;
+      // Get All Clients
+      .addCase(thunks.getAllClients.fulfilled, (state, action) => {
         state.clients = action.payload;
       })
-      .addCase(getAllFullClients.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+      // Get Client By Id
+      .addCase(thunks.getClientById.fulfilled, (state, action) => {
+        state.currentClient = action.payload;
       })
-      // get complete form
-
-      .addCase(fetchByidCompleteForm.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchByidCompleteForm.fulfilled, (state, action) => {
-        state.loading = false;
-        state.client = action.payload;
-      })
-      .addCase(fetchByidCompleteForm.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-
-    builder
-      .addCase(updateAddClientForm.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateAddClientForm.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        const index = state.clients.findIndex(
-          (c) => c._id === action.payload._id
-        );
+      // Update Client
+      .addCase(thunks.updateClientPersonalDetails.fulfilled, (state, action) => {
+        state.currentClient = action.payload.updatedClient;
+        const index = state.clients.findIndex(c => c._id === action.payload.updatedClient._id);
         if (index !== -1) {
-          state.clients[index] = action.payload;
+          state.clients[index] = action.payload.updatedClient;
         }
       })
-      .addCase(updateAddClientForm.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-
-    // 🔹 Delete AddClientForm
-    builder
-      .addCase(deleteAddClientForm.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      // Delete Client
+      .addCase(thunks.deleteClient.fulfilled, (state, action) => {
+        state.clients = state.clients.filter(c => c._id !== action.payload);
       })
-      .addCase(deleteAddClientForm.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.clients = state.clients.filter(
-          (client) => client._id !== action.payload.id
-        );
+      // Add family members
+      .addCase(thunks.addFamilyMemberToClient.fulfilled, (state, action) => {
+          if (state.currentClient) {
+              state.currentClient.familyMembers = action.payload.familyMembers;
+          }
       })
-      .addCase(deleteAddClientForm.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })    
+      // Add financial info
+      .addCase(thunks.addFinancialInfoToClient.fulfilled, (state, action) => {
+        if (state.currentClient) {
+            state.currentClient.financialInfo = action.payload.financialInfo;
+        }
+      })
+      // Add future priorities
+      .addCase(thunks.addFuturePrioritiesToClient.fulfilled, (state, action) => {
+        if (state.currentClient) {
+            state.currentClient.futurePriorities = action.payload.client.futurePriorities;
+            state.currentClient.needs = action.payload.client.needs;
+        }
+      })
+      // Add proposed plan
+      .addCase(thunks.addProposedPlanToClient.fulfilled, (state, action) => {
+        if (state.currentClient) {
+            state.currentClient.proposedPlan = action.payload.proposedPlan;
+        }
+      })
+       // Update Status
+      .addCase(thunks.updateClientStatus.fulfilled, (state, action) => {
+        const index = state.clients.findIndex(c => c._id === action.payload._id);
+        if (index !== -1) {
+            state.clients.splice(index, 1);
+        }
+      })
+      .addMatcher(
+        (action) => action.type.endsWith('/pending'),
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith('/fulfilled'),
+        (state) => {
+          state.loading = false;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        }
+      );
   },
-
-
-
 });
 
-export const { resetClientState } = clientSlice.actions;
+export const { clearCurrentClient } = clientSlice.actions;
 export default clientSlice.reducer;

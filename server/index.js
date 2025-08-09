@@ -16,8 +16,8 @@ const LeadCityRoute = require("./Routes/Lead/CityRoute");
 const TaskRoute = require("./Routes/TaskRoute");
 const FinancialProductRoute = require("./Routes/FinancialProductRoute");
 const CompanyNameRoute = require("./Routes/CompanyNameRoute");
-const SuspectLeadRoute = require("./Routes/SuspectLeadRoute");
-const ProspectLeadRoute = require("./Routes/ProspectLeadRoute");
+const SuspectRoute = require("./Routes/SuspectRoute");
+const ProspectRoute = require("./Routes/ProspectRoute");
 const RegistrarRoute = require("./Routes/RegistrarRoute");
 const AMCRoute = require("./Routes/AMCRoute");
 const LeadTypeRoute = require("./Routes/LeadTypeRoute");
@@ -70,8 +70,8 @@ app.use("/api/occupation-types", OccupationTypeRoute);
 app.use("/api/office-diary", OfficeDiaryRoute);
 app.use("/api/office-purchase", OfficePurchaseRoute);
 app.use("/api/important-documents", ImpDocumentRoute);
-app.use("/api/SuspectLead", SuspectLeadRoute);
-app.use("/api/ProspectLead", ProspectLeadRoute);
+app.use("/api/suspect", SuspectRoute);
+app.use("/api/prospect", ProspectRoute);
 app.use("/api/client", CLientRoute);
 
 

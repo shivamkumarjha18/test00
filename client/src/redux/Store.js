@@ -11,8 +11,8 @@ import MarketingTaskReducer from "./feature/MarketingTask/MarketingSlice";
 import ServiceTaskReducer from "./feature/ServiceTask/ServiceSlice";
 import FinancialProductReducer from "./feature/FinancialProduct/FinancialSlice";
 import CompanyNameReducer from "./feature/ComapnyName/CompanySlice";
-import SuspectLeadReducer from "./feature/SuspectLead/SuspectLeadSlice";
-import ProspectLeadReducer from "./feature/ProspectLead/ProspectSlice";
+import suspectReducer from "./feature/SuspectRedux/SuspectSlice";
+import prospectReducer from "./feature/ProspectRedux/ProspectSlice";
 import registrarReducer from "./feature/Registrar/RegistrarSlice";
 import AMCReducer from "./feature/AMC/AMCSlice";
 import LeadTypeReducer from "./feature/LeadType/LeadTypeSlice";
@@ -34,8 +34,8 @@ export const store = configureStore({
     ServiceTask: ServiceTaskReducer,
     financialProduct: FinancialProductReducer,
     CompanyName: CompanyNameReducer,
-    suspectLead: SuspectLeadReducer,
-    prospectLead: ProspectLeadReducer,
+    suspect: suspectReducer,
+    prospect: prospectReducer,
     registrar: registrarReducer,
     AMC: AMCReducer,
     LeadType: LeadTypeReducer,
