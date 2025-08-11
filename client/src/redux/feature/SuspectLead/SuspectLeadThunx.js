@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/SuspectLead";
+const API_URL = "/api/suspect";
 
 // Fetch all leads
 export const fetchSuspectLeads = createAsyncThunk(

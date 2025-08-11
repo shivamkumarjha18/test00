@@ -24,6 +24,8 @@ const LeadAreaSlice = createSlice({
       state.error = null;
     },
   },
+
+ 
   extraReducers: (builder) => {
     builder
       // First handle all specific cases with addCase

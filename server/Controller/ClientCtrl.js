@@ -1,11 +1,10 @@
 
-// const ClientFirstForm = require("../Models/ClientFirstFormModel");
-// const AddClientForm = require("../Models/ClientModel");
+
 
 const clientModel = require("../Models/SusProsClientSchema");
 const generateAndStoreGroupCode = require("../utils/generateGroupCode")
 const Kyc = require("../Models/kyc");
-// ------------------- CREATE -------------------
+
 
 
 
@@ -111,7 +110,8 @@ exports.addFamilyMember = async (req, res) => {
     res.status(201).json({
       success: true,
       message: `${formattedMembers.length} family member(s) added successfully`,
-      familyMembers: client.familyMembers
+      familyMembers: client.familyMembers,
+      clientId :client._id
     });
 
   } catch (error) {
@@ -140,8 +140,8 @@ exports.addFinancialInfo = async (req, res) => {
       return res.status(404).json({ success: false, message: "Client not found" });
     }
 
-    console.log("Request body:", req.body);
-    console.log("Request files:", req.files);
+    // console.log("Request body:", req.body);
+    // console.log("Request files:", req.files);
 
     // Parse JSON strings if they exist, otherwise use empty arrays
     let insuranceData = [];
@@ -184,15 +184,29 @@ exports.addFinancialInfo = async (req, res) => {
     console.log("Parsed data:", { insuranceData, investmentsData, loansData });
 
     // Attach document filenames to each item if files exist
+    // const attachFiles = (dataArray, uploadedFilesArray = []) => {
+    //   if (Array.isArray(dataArray) && Array.isArray(uploadedFilesArray)) {
+    //     dataArray.forEach((item, index) => {
+    //       if (uploadedFilesArray[index]) {
+    //         item.document = uploadedFilesArray[index].filename;
+    //       }
+    //     });
+    //   }
+    // };
+
     const attachFiles = (dataArray, uploadedFilesArray = []) => {
-      if (Array.isArray(dataArray) && Array.isArray(uploadedFilesArray)) {
-        dataArray.forEach((item, index) => {
-          if (uploadedFilesArray[index]) {
-            item.document = uploadedFilesArray[index].filename;
-          }
-        });
+  if (Array.isArray(dataArray) && Array.isArray(uploadedFilesArray)) {
+    dataArray.forEach((item, index) => {
+      if (uploadedFilesArray[index]) {
+        item.document = uploadedFilesArray[index].filename;
+      } else {
+        item.document = null;
       }
-    };
+    });
+  }
+};
+
+
 
     // Safely access file arrays
     const insuranceFiles = req.files?.insuranceDocuments || [];
@@ -239,6 +253,7 @@ exports.addFinancialInfo = async (req, res) => {
       success: true,
       message: "Financial info with documents added successfully",
       financialInfo: client.financialInfo,
+      clientId:client._id,
       added: {
         insurance: insuranceData.length,
         investments: investmentsData.length,
@@ -287,7 +302,7 @@ exports.addFuturePrioritiesAndNeeds = async (req, res) => {
 
     // Build update object
     const updateData = {
-      futurePriorities: { futurePriorities }
+      futurePriorities
     };
 
     if (needs && typeof needs === 'object') {
@@ -306,7 +321,8 @@ exports.addFuturePrioritiesAndNeeds = async (req, res) => {
 
     res.status(200).json({
       message: 'Future priorities (and needs if provided) updated successfully',
-      client: updatedClient
+      client: updatedClient,
+      clientId: updatedClient._id
     });
 
   } catch (error) {
@@ -317,19 +333,21 @@ exports.addFuturePrioritiesAndNeeds = async (req, res) => {
 
 
 
+
+
 // add proposed financial plan
 exports.addProposedFinancialPlan = async (req, res) => {
   try {
     const { clientId } = req.params;
-    const { createdDate, memberName, financialProduct, financialCompany, planName } = req.body;
 
-    // Validate required inputs
+    // Validate client ID
     if (!clientId) {
       return res.status(400).json({ success: false, message: "Client ID is required" });
     }
 
-    if (!createdDate || !memberName || !financialProduct || !financialCompany || !planName) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+    // Validate request body
+    if (!req.body) {
+      return res.status(400).json({ success: false, message: "Request body is required" });
     }
 
     // Handle file uploads
@@ -338,35 +356,22 @@ exports.addProposedFinancialPlan = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Please provide documents to upload"
-      })
-    };
-
-
-    const documentPaths = files?.map(file => file.filename) || [];
-    if (documentPaths) {
-      console.log(documentPaths)
+      });
     }
+
+    const documentPaths = files.map(file => file.filename);
 
     const clientToUpdate = await clientModel.findById(clientId);
     if (!clientToUpdate) {
       return res.status(404).json({ success: false, message: "Client not found" });
     }
 
-    // Create new proposed plan object
+    // Create new proposed plan object using {...req.body}
     const newProposedPlan = {
-      createdDate: new Date(createdDate),
-      memberName,
-      financialProduct,
-      financialCompany,
-      planName,
+      ...req.body,
       documents: documentPaths
     };
 
-    // Update the proposedPlan field
-    // clientToUpdate.proposedPlan = newProposedPlan;
-
-
-    // This is the correct way to add a new plan to the array.
     clientToUpdate.proposedPlan.push(newProposedPlan);
 
     await clientToUpdate.save();
@@ -374,7 +379,8 @@ exports.addProposedFinancialPlan = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Proposed financial plan updated successfully",
-      proposedPlan: clientToUpdate.proposedPlan
+      proposedPlan: clientToUpdate.proposedPlan,
+      clientId: clientToUpdate._id
     });
 
   } catch (error) {
@@ -382,25 +388,6 @@ exports.addProposedFinancialPlan = async (req, res) => {
     res.status(500).json({ error: 'Server error', details: error.message });
   }
 };
-
-
-
-
-// update Client Details
- exports.updateClientFirstForm = async (req, res) => {
-   try {
-   const updatedClient = await clientModel.findByIdAndUpdate(
-    req.params.id,
-      { ...req.body, status: "client" }, { new: true }
-    );
-    if (!updatedClient)
-   return res.status(404).json({ message: "Client not found" });
-res.status(200).json(updatedClient);
-  } catch (error) {
-   res.status(400).json({ message: error.message });
-  }
-};
-
 
 
 
@@ -419,7 +406,7 @@ exports.updatePersonalDetails = async (req, res) => {
     if (!newPersonalDetails || Object.keys(newPersonalDetails).length === 0) {
       return res.status(400).json({ success: false, message: "New personal details are required in the request body." });
     }
-
+    
     // 3. Find the client by ID and update the personalDetails object.
     // The '$set' operator is used here to replace the entire 'personalDetails' object.
     const updatedClient = await clientModel.findByIdAndUpdate(
@@ -457,15 +444,15 @@ exports.updatePersonalDetails = async (req, res) => {
 
 // Get all CLients
 exports.getAllClients = async (req, res) => {
-   try {
-   const allClients = await clientModel.find({ status: "client" });
+  try {
+    const allClients = await clientModel.find({ status: "client" });
    if(allClients.length === 0) return res.status(404).json({success : false, message: "No clients found"});
     res.status(200).json({success : true, clients: allClients});
    } catch (error) {
       console.error(error);
       res.status(500).json({success : false, message: "Server error while fetching clients", error: error.message});
 
-   }
+    }
 }
 
 
@@ -483,7 +470,7 @@ exports.getClientById = async(req, res)=>{
     res.status(200).json({success: true, client});
   } catch (error) {
     console.error(error);
-      res.status(500).json({success : false, message: "Server error while fetching clients", error: error.message});
+    res.status(500).json({success : false, message: "Server error while fetching clients", error: error.message});
 
   }
 }
@@ -493,7 +480,7 @@ exports.getClientById = async(req, res)=>{
 // update Client Status
 exports.updateClientStatus = async (req, res) => {
 
- try {
+  try {
     const { status } = req.body;
     if(! status){
       return res.status(400).json({ message: "Status is required" });
@@ -511,16 +498,16 @@ exports.updateClientStatus = async (req, res) => {
     res.status(200).json(updatedClient);
   } catch (error) {
      console.error(error);
-    res.status(500).json({ error: error.message });
+     res.status(500).json({ error: error.message });
   }
-
+  
 }
 
 
 
 // delete a client
 exports.deleteClient = async(req, res)=>{
-   try {
+  try {
     
     const {id} = req.params;
     if(! id) {
@@ -533,12 +520,12 @@ exports.deleteClient = async(req, res)=>{
    } catch (error) {
      console.error(error);
      res.status(500).json({ success: false, message: "Server error while deleting client", error: error.message });   
-   }
-}
+    }
+  }
 
 
 
-// CREATE a new KYC
+  // CREATE a new KYC
 exports.createKyc = async (req, res) => {
   try {
     const DOCUMENT_ENUM = [
@@ -552,7 +539,7 @@ exports.createKyc = async (req, res) => {
       "Voter Id",
       "Policy Status"
     ];
-
+    
     const { clientId } = req.params;
     const { memberName, documentName, documentNumber, remark } = req.body;
 
@@ -578,17 +565,17 @@ exports.createKyc = async (req, res) => {
     if (!client) {
       return res.status(404).json({ success: false, message: "Client not found" });
     }
-
+    
     // Save file name
     // const fileUrl = req.file.filename;
 
     const fileUrl = `${req.protocol}://${req.get('host')}/Images/${req.file.filename}`;
 
+    
 
-
-
+    
     // console.log(fileUrl, "fileUrl in createKyc");
-
+    
     // Create KYC
     const kyc = new Kyc({
       memberName,
@@ -600,14 +587,14 @@ exports.createKyc = async (req, res) => {
     });
 
     await kyc.save();
-
+    
     // Link KYC to client
     client.kycs.push(kyc._id);
     await client.save();
-
+    
     // Determine remaining vs completed documents
     const uploadedKycs = await Kyc.find({ user: clientId }).select("documentName");
-
+    
     const uploadedDocs = uploadedKycs.map(k => k.documentName);
 
     const responseList = DOCUMENT_ENUM.map(doc => ({
@@ -653,12 +640,12 @@ exports.getKycsByClient = async (req, res) => {
 exports.deleteKyc = async (req, res) => {
   try {
     const { id } = req.params;
-
+    
     const kyc = await Kyc.findByIdAndDelete(id);
     if (!kyc) {
       return res.status(404).json({ success: false, message: "KYC not found" });
     }
-
+    
     // Optionally remove it from client's kycs array
     await clientModel.updateOne({ kycs: id }, { $pull: { kycs: id } });
 
@@ -687,14 +674,14 @@ exports.updateKyc = async (req, res) => {
       "Voter Id",
       "Policy Status"
     ];
-
+    
     if (documentName && !allowedDocumentNames.includes(documentName)) {
       return res.status(400).json({
         success: false,
         message: `Invalid documentName. Allowed values are: ${allowedDocumentNames.join(", ")}`
       });
     }
-
+    
     // Prepare update object
     const updateData = {
       memberName,
@@ -710,24 +697,24 @@ exports.updateKyc = async (req, res) => {
       updateData.fileUrl = fileUrl;
     }
 
-
+    
     // Remove undefined fields (to avoid overwriting with undefined)
     Object.keys(updateData).forEach(key => {
       if (updateData[key] === undefined) delete updateData[key];
     });
-
+    
     const updated = await Kyc.findByIdAndUpdate(id, updateData, { new: true });
-
+    
     if (!updated) {
       return res.status(404).json({ success: false, message: "KYC not found" });
     }
-
+    
     return res.status(200).json({
       success: true,
       message: "KYC updated successfully",
       updated
     });
-
+    
   } catch (error) {
     console.error("Update KYC error:", error);
     return res.status(500).json({ success: false, message: error.message });
@@ -747,163 +734,177 @@ exports.updateKyc = async (req, res) => {
 
 // Previous controllers 
 
-exports.createClientFirstForm = async (req, res) => {
-  try {
-    const clientData = { ...req.body, status: "client" };
-    const newClient = new clientModel(clientData);
+// exports.createClientFirstForm = async (req, res) => {
+//   try {
+//     const clientData = { ...req.body, status: "client" };
+//     const newClient = new clientModel(clientData);
+    
+//     await newClient.save();
+    
+//     // Generate and store the group code for the new client
+//     const groupCode = await generateAndStoreGroupCode(newClient._id.toString());
+//     newClient.personalDetails.groupCode = groupCode;
 
-    await newClient.save();
-
-    // Generate and store the group code for the new client
-    const groupCode = await generateAndStoreGroupCode(newClient._id.toString());
-    newClient.personalDetails.groupCode = groupCode;
-
-    await newClient.save();
-
-    res.status(201).json(newClient);
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      res.status(400).json({
-        error: "Validation failed",
-        details: err.errors
-      });
-    } else {
-      res.status(500).json({
-        error: "Failed to create client first form",
-        details: err.message
-      });
-    }
-  }
-};
-
-
-
-
- //  Update first form
- exports.updateClientFirstForm = async (req, res) => {
-   try {
-   const updatedForm = await clientModel.findByIdAndUpdate(
-    req.params.id,
-      { ...req.body, status: "client" },      { new: true }
-    );
-    if (!updatedForm)
-   return res.status(404).json({ message: "ClientFirstForm not found" });
-res.status(200).json(updatedForm);
-  } catch (error) {
-   res.status(400).json({ message: error.message });
-  }
-};
+//     await newClient.save();
+    
+//     res.status(201).json(newClient);
+//   } catch (err) {
+//     if (err.name === 'ValidationError') {
+//       res.status(400).json({
+//         error: "Validation failed",
+//         details: err.errors
+//       });
+//     } else {
+//       res.status(500).json({
+//         error: "Failed to create client first form",
+//         details: err.message
+//       });
+//     }
+//   }
+// };
 
 
 
-exports.completeClientForm = async (req, res) => {
-  try {
-    const { _id, ...rest } = req.body; // Extract _id
 
-    // Ensure the status is always "client"
-    const updateData = { ...rest, status: "client" };
+//  Update first form
+//  exports.updateClientFirstForm = async (req, res) => {
+//    try {
+//      const updatedForm = await clientModel.findByIdAndUpdate(
+//        req.params.id,
+//        { ...req.body, status: "client" },      { new: true }
+//     );
+//     if (!updatedForm)
+//       return res.status(404).json({ message: "ClientFirstForm not found" });
+//     res.status(200).json(updatedForm);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
 
-    // ✅ Find by _id and update
-    const updatedClient = await AddClientForm.findByIdAndUpdate(
-      _id,
-      updateData,
-      { new: true, upsert: true } // upsert: true will insert if not exists
-    );
 
-    res.status(200).json(updatedClient);
-  } catch (err) {
-    res.status(500).json({
-      error: "Failed to complete client form",
-      details: err.message,
-    });
-  }
-};
+
+// exports.completeClientForm = async (req, res) => {
+//   try {
+//     const { _id, ...rest } = req.body; // Extract _id
+    
+//     // Ensure the status is always "client"
+//     const updateData = { ...rest, status: "client" };
+    
+//     // ✅ Find by _id and update
+//     const updatedClient = await AddClientForm.findByIdAndUpdate(
+//       _id,
+//       updateData,
+//       { new: true, upsert: true } // upsert: true will insert if not exists
+//     );
+
+//     res.status(200).json(updatedClient);
+//   } catch (err) {
+//     res.status(500).json({
+//       error: "Failed to complete client form",
+//       details: err.message,
+//     });
+//   }
+// };
 
 
 
 // Fetch all complete client forms
-exports.getCompleteClientForms = async (req, res) => {
-  try {
-    const clientForms = await clientModel.find({ status: "client" });
-    res.status(200).json(clientForms);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to fetch client forms", details: err.message });
-  }
-};
+// exports.getCompleteClientForms = async (req, res) => {
+//   try {
+//     const clientForms = await clientModel.find({ status: "client" });
+//     res.status(200).json(clientForms);
+//   } catch (err) {
+//     res
+//       .status(500)
+//       .json({ error: "Failed to fetch client forms", details: err.message });
+//     }
+// };
 
 
 // Fetch a single complete client form by ID
-exports.getAddClientFormById = async (req, res) => {
-  try {
-    const addClientForm = await clientModel.findById(req.params.id);
-    if (!addClientForm) {
-      return res.status(404).json({ message: "AddClientForm not found" });
-    }
-    res.status(200).json(addClientForm);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+// exports.getAddClientFormById = async (req, res) => {
+//   try {
+//     const addClientForm = await clientModel.findById(req.params.id);
+//     if (!addClientForm) {
+//       return res.status(404).json({ message: "AddClientForm not found" });
+//     }
+//     res.status(200).json(addClientForm);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 
 
 
 // Update complete client form
-exports.updateAddClientForm = async (req, res) => {
-  try {
-    const updatedForm = await clientModel.findByIdAndUpdate(
-      req.params.id,
-      { ...req.body, status: "client" },
-      { new: true } // Return updated document
-    );
-    if (!updatedForm) {
-      return res.status(404).json({ message: "AddClientForm not found" });
-    }
-    res.status(200).json(updatedForm);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+// // update Client Details
+//  exports.updateClientFirstForm = async (req, res) => {
+//    try {
+//    const updatedClient = await clientModel.findByIdAndUpdate(
+//     req.params.id,
+//       { ...req.body, status: "client" }, { new: true }
+//     );
+//     if (!updatedClient)
+//    return res.status(404).json({ message: "Client not found" });
+// res.status(200).json(updatedClient);
+//   } catch (error) {
+//    res.status(400).json({ message: error.message });
+//   }
+// };
+// exports.updateAddClientForm = async (req, res) => {
+//   try {
+//     const updatedForm = await clientModel.findByIdAndUpdate(
+//       req.params.id,
+//       { ...req.body, status: "client" },
+//       { new: true } // Return updated document
+//     );
+//     if (!updatedForm) {
+//       return res.status(404).json({ message: "AddClientForm not found" });
+//     }
+//     res.status(200).json(updatedForm);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
 
 
 
-// Delete complete client form
-exports.deleteAddClientForm = async (req, res) => {
-  try {
-    const deletedForm = await clientModel.findByIdAndDelete(req.params.id, {
-      ...req.body,
-      status: "client",
-    });
-    if (!deletedForm) {
-      return res.status(404).json({ message: "AddClientForm not found" });
-    }
-    res.status(200).json({ message: "AddClientForm deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+// // Delete complete client form
+// exports.deleteAddClientForm = async (req, res) => {
+//   try {
+//     const deletedForm = await clientModel.findByIdAndDelete(req.params.id, {
+//       ...req.body,
+//       status: "client",
+//     });
+//     if (!deletedForm) {
+//       return res.status(404).json({ message: "AddClientForm not found" });
+//     }
+//     res.status(200).json({ message: "AddClientForm deleted successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 
 
-// Update only the status of a lead
-exports.updateClientLeadStatus = async (req, res) => {
-  try {
-    const { status } = req.body;
-    const updatedLead = await clientModel.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    );
-    if (!updatedLead) {
-      return res.status(404).json({ message: "Lead not found" });
-    }
-    res.status(200).json(updatedLead);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+// // Update only the status of a lead
+// exports.updateClientLeadStatus = async (req, res) => {
+//   try {
+//     const { status } = req.body;
+//     const updatedLead = await clientModel.findByIdAndUpdate(
+//       req.params.id,
+//       { status },
+//       { new: true }
+//     );
+//     if (!updatedLead) {
+//       return res.status(404).json({ message: "Lead not found" });
+//     }
+//     res.status(200).json(updatedLead);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 
 

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/leadarea";
+const API_URL = "/api/leadarea";
 
 export const fetchAreas = createAsyncThunk(
   "leadArea/fetchAll",

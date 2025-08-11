@@ -7,7 +7,7 @@ export const createKyc = createAsyncThunk(
   'kyc/createKyc',
   async ({ clientId, formData }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`/client/kyc/create/${clientId}`, formData, {
+      const response = await axios.post(`/api/client/kyc/create/${clientId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -33,7 +33,7 @@ export const fetchKycsByClient = createAsyncThunk(
   'kyc/fetchKycsByClient',
   async (clientId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/client/kyc/${clientId}`);
+      const response = await axios.get(`/api/client/kyc/${clientId}`);
       return response?.data?.kycs;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -52,7 +52,7 @@ export const deleteKyc = createAsyncThunk(
   'kyc/deleteKyc',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/client/kyc/${id}`);
+      const response = await axios.delete(`/api/client/kyc/${id}`);
       return response?.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -73,7 +73,7 @@ export const updateKyc = createAsyncThunk(
   'kyc/updateKyc',
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/client/kyc/${id}`, formData, {
+      const response = await axios.put(`/api/client/kyc/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 // import axios from "../../../config/axios";
 import axios from "../../../config/axios";
 
-const API_URL = "/leadType";
+const API_URL = "/api/leadType";
 
 export const fetchLeadType = createAsyncThunk("/leadType/fetch", async () => {
   const response = await axios.get(API_URL);

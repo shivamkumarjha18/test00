@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/leadsubarea";
+const API_URL = "/api/leadsubarea";
 
 // Fetch all sub areas with populated area data
 export const fetchSubAreas = createAsyncThunk(

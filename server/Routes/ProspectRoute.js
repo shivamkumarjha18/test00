@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+<<<<<<< HEAD
 const ProspectCtrl = require("../Controller/ProspectCtrl");
 const upload = require("../config/upload");
 
@@ -32,5 +33,16 @@ router.put("/update/status/:id", ProspectCtrl.updateProspectStatus);
 
 // Delete Prospect by ID
 router.delete("/delete/:id", ProspectCtrl.deleteProspect);
+=======
+const ProspectCtrl = require("../Controller/ProspectLeadCtrl");
+
+router.post("/", ProspectCtrl.createProspectLead); // Create
+router.get("/", ProspectCtrl.getProspectLeads); // Read all
+router.get("/:id", ProspectCtrl.getProspectLeadById); // get by Id
+router.put("/:id", ProspectCtrl.updateProspectLead); // Update
+router.delete("/:id", ProspectCtrl.deleteProspectLead); // Delete
+
+router.put("/status/:id", ProspectCtrl.updateProspectLeadStatus);
+>>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
 
 module.exports = router;

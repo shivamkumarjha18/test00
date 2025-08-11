@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const BASE_URL = "/important-documents";
+const BASE_URL = "/api/important-documents";
 
 // CREATE
 export const createImportantDocument = createAsyncThunk(

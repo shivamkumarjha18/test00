@@ -28,7 +28,7 @@ import {
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchByidCompleteForm } from "../../redux/feature/ClientRedux/ClientThunx";
+import {getClientById } from "../../redux/feature/ClientRedux/ClientThunx";
 
 const CustomerDetail = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -110,7 +110,7 @@ const CustomerDetail = () => {
 
   useEffect(() => {
     const init = async () => {
-      const res = await dispatch(fetchByidCompleteForm(id)).unwrap();
+      const res = await dispatch(getClientById(id)).unwrap();
       console.log("client Details fetched successfully", res);
       setUserData(res?.client);
       setfuturePriorities(userData?.futurePriorities?.futurePriorities)

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/registrar"; // base URL of your backend API
+const API_URL = "/api/registrar"; // base URL of your backend API
 
 // Fetch all registrars
 export const fetchRegistrars = createAsyncThunk(

@@ -1,5 +1,21 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+=======
+
+
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ClientSecondForm from "./ClientSecondForm";
+import ClientFirstFrom from "./ClientFirstFrom";
+import {
+  createClient,
+   getClientById,
+   updateClientPersonalDetails
+} from "../../../redux/feature/ClientRedux/ClientThunx";
+
+
+>>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -41,6 +57,7 @@ const AddClient = ({ editId, setActiveTab }) => {
     setFormData(data);
   };
 
+<<<<<<< HEAD
   const renderTabContent = () => {
     switch (activeTab) {
       case "personalDetails":
@@ -62,6 +79,28 @@ const AddClient = ({ editId, setActiveTab }) => {
         return <ProposedPlanForm clientId={clientId} />;
       default:
         return <PersonalDetailsForm onDataChange={handlePersonalDetailsSubmit} />;
+=======
+  useEffect(() => {
+    if (editId) {
+      dispatch(getClientById(editId))
+        .unwrap()
+        .then((clientData) => {
+          setClientFirstData(clientData);
+          setIsEditMode(true);
+          setShowSecondForm(true);
+          setFormKey(Date.now());
+        })
+        .catch(() => {
+          toast.error("Failed to load client data for editing");
+          setActiveTab("display");
+        });
+    } else {
+      setClientFirstData({});
+      setClientSecondData({});
+      setShowSecondForm(false);
+      setIsEditMode(false);
+      setFormKey(Date.now());
+>>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
     }
   };
 

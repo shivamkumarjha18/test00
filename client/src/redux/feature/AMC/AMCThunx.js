@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/AMC"; // base URL of your backend API
+const API_URL = "/api/AMC"; // base URL of your backend API
 
 // Fetch all AMCs
 export const fetchAMC = createAsyncThunk(

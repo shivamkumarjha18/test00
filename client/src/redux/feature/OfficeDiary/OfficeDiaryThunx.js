@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const BASE_URL = "/office-diary";
+const BASE_URL = "/api/office-diary";
 
 // GET all diaries
 export const fetchOfficeDiaries = createAsyncThunk(

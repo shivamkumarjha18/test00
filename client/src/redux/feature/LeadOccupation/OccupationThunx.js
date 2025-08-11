@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 // import axios from "../../../config/axios";
 import axios from "../../../config/axios";
 
-const API_URL = "/leadOccupation";
+const API_URL = "/api/leadOccupation";
 
 export const fetchLeadOccupationDetails = createAsyncThunk(
   "/leadOccupation/fetch",

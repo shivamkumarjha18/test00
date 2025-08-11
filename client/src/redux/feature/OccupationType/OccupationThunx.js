@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const BASE_URL = "/occupation-types"; // adjust to your API route
+const BASE_URL = "/api/occupation-types"; // adjust to your API route
 
 export const fetchOccupations = createAsyncThunk(
   "occupationType/fetchAll",

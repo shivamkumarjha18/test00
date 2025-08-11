@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/Task";
+const API_URL = "/api/Task";
 
 export const createCompositeTask = createAsyncThunk(
   "compositeTask/create",

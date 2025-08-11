@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-const API_URL = "/FinancialProduct";
+const API_URL = "/api/FinancialProduct";
 // get all
 export const fetchFinancialProduct = createAsyncThunk(
   "FinancialProduct/fetchAll",
