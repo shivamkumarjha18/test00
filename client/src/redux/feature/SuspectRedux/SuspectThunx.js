@@ -99,6 +99,7 @@ export const updateSuspectPersonalDetails = createAsyncThunk(
   }
 );
 
+
 export const deleteSuspect = createAsyncThunk(
   "suspect/delete",
   async (id, { rejectWithValue }) => {

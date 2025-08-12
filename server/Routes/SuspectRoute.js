@@ -1,46 +1,56 @@
+
 const express = require("express");
 const router = express.Router();
-<<<<<<< HEAD
 const SuspectCtrl = require("../Controller/SuspectCtrl");
 const upload = require("../config/upload");
+
+
 
 // create suspect
 router.post("/create", SuspectCtrl.createSuspect);
 
 // add family members
-router.put("/add/family/:suspectId", SuspectCtrl.addFamilyMember);
+router.put("/add/family/:id", SuspectCtrl.addFamilyMember);
 
 // add financial info
-router.put("/add/financialinfo/:suspectId", SuspectCtrl.addFinancialInfo);
+router.put( "/add/financialinfo/:id",
+ upload.fields([
+    { name: "insuranceDocuments", maxCount: 10 },
+    { name: "investmentDocuments", maxCount: 10 },
+    { name: "loanDocuments", maxCount: 10 },
+]),
+  SuspectCtrl.addFinancialInfo
+);
+
 
 // add future priotities
-router.put("/add/futurepriorities/:suspectId", SuspectCtrl.addFuturePrioritiesAndNeeds);
+router.put("/add/futurepriorities/:id", SuspectCtrl.addFuturePrioritiesAndNeeds)
+
 
 // add proposed financial plan
-router.put("/add/proposedplan/:suspectId", SuspectCtrl.addProposedFinancialPlan);
+router.put("/add/proposedplan/:id", upload.array("documents"), SuspectCtrl.addProposedFinancialPlan)
+
+
 
 // update personal details of the suspect
-router.put("/update/personaldetails/:suspectId", SuspectCtrl.updatePersonalDetails);
+router.put("/update/personaldetails/:id", SuspectCtrl.updatePersonalDetails);
+
 
 // Get All Suspects
-router.get("/all", SuspectCtrl.getAllSuspects);
+router.get("/all", SuspectCtrl.getAllSuspects)
+
 
 // Get Suspect by ID
 router.get("/:id", SuspectCtrl.getSuspectById);
 
-// Update Suspect Status by ID
-router.put("/update/status/:id", SuspectCtrl.updateSuspectStatus);
 
-// Delete Suspect by ID
+// Update Suspect  Status by ID
+router.put("/update/status/:id", SuspectCtrl.updateSuspectStatus)
+
+
+// Delete Suspect  by ID
 router.delete("/delete/:id", SuspectCtrl.deleteSuspect);
-=======
-const controller = require("../Controller/SuspectLeadCtrl");
 
-router.post("/", controller.createSuspectLead); // Create
-router.get("/", controller.getSuspectLeads); // Read all
-router.get("/:id", controller.getSuspectLeadById); // get by Id
-router.put("/:id", controller.updateSuspectLead); // Update
-router.delete("/:id", controller.deleteSuspectLead); // Delete
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
+
 
 module.exports = router;

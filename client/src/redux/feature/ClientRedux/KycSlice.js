@@ -1,7 +1,4 @@
 
-
-
-
 import { createSlice } from "@reduxjs/toolkit";
 import { createKyc, deleteKyc, fetchKycsByClient, updateKyc } from "./KycThunx";
 

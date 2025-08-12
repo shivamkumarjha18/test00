@@ -174,7 +174,7 @@ const Navbarfristn = () => {
               <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
                 <Dropdown.Toggle as={Nav.Link}>
                   <FiLayers className="nav-icon" />
-                  Costomers <FiChevronDown size={12} className="ms-1" />
+                  Customers <FiChevronDown size={12} className="ms-1" />
                 </Dropdown.Toggle>
                 <Dropdown.Menu
                   className="custom-dropdown p-4"
@@ -212,9 +212,7 @@ const Navbarfristn = () => {
                       <Dropdown.Item as={Link} to="/client/add">
                         Add Client
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/kyc">
-                        KYC
-                      </Dropdown.Item>
+                     
                     </div>
 
                     {/* Location Master */}

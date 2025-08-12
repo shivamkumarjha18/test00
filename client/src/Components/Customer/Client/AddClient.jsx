@@ -1,32 +1,14 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-=======
-
-
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import ClientSecondForm from "./ClientSecondForm";
-import ClientFirstFrom from "./ClientFirstFrom";
-import {
-  createClient,
-   getClientById,
-   updateClientPersonalDetails
-} from "../../../redux/feature/ClientRedux/ClientThunx";
-
-
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import PersonalDetailsForm from "./PersonalDetailsForm";
 import FamilyMembersForm from "./FamilyMembersForm";
-import FinancialInfoForm from "./FinancialInfoForm";
+import FinancialInfoForm from "./FinancialInformationForm";
 import FuturePrioritiesForm from "./FuturePrioritiesForm";
 import ProposedPlanForm from "./ProposedPlanForm";
 
-// Placeholder for the new thunk
-const createClient = (data) => ({ type: 'client/create', payload: data });
 
 const AddClient = ({ editId, setActiveTab }) => {
   const [activeTab, setActiveTabState] = useState("personalDetails");
@@ -37,27 +19,11 @@ const AddClient = ({ editId, setActiveTab }) => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.client);
 
-  const handlePersonalDetailsSubmit = async (personalDetailsData) => {
-    try {
-      // In a real scenario, you would dispatch a thunk here
-      // const resultAction = await dispatch(createClient(personalDetailsData));
-      // const newClientId = resultAction.payload._id;
-
-      // For now, let's simulate success
-      const newClientId = "fake-client-id-" + Date.now();
-      setClientId(newClientId);
-      toast.success("Personal details saved successfully!");
-      setActiveTabState("familyMembers"); // Move to the next tab
-    } catch (error) {
-      toast.error("Failed to save personal details.");
-    }
-  };
-
+  
   const handleDataChange = (data) => {
     setFormData(data);
   };
 
-<<<<<<< HEAD
   const renderTabContent = () => {
     switch (activeTab) {
       case "personalDetails":
@@ -66,7 +32,7 @@ const AddClient = ({ editId, setActiveTab }) => {
             onDataChange={handleDataChange}
             initialData={formData}
             isEditMode={isEditMode}
-            onDataChange={handlePersonalDetailsSubmit}
+            // onDataChange={handlePersonalDetailsSubmit}
           />
         );
       case "familyMembers":
@@ -79,28 +45,6 @@ const AddClient = ({ editId, setActiveTab }) => {
         return <ProposedPlanForm clientId={clientId} />;
       default:
         return <PersonalDetailsForm onDataChange={handlePersonalDetailsSubmit} />;
-=======
-  useEffect(() => {
-    if (editId) {
-      dispatch(getClientById(editId))
-        .unwrap()
-        .then((clientData) => {
-          setClientFirstData(clientData);
-          setIsEditMode(true);
-          setShowSecondForm(true);
-          setFormKey(Date.now());
-        })
-        .catch(() => {
-          toast.error("Failed to load client data for editing");
-          setActiveTab("display");
-        });
-    } else {
-      setClientFirstData({});
-      setClientSecondData({});
-      setShowSecondForm(false);
-      setIsEditMode(false);
-      setFormKey(Date.now());
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
     }
   };
 

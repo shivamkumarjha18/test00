@@ -77,7 +77,7 @@ const initialLoanForm = {
   document: null,
 };
 
-const FinancialInformationForm = ({ clientId, onClientCreated }) => {
+const FinancialInformationForm = ({ clientId, clientData, onClientCreated }) => {
   const dispatch = useDispatch();
 
   const [openInsurance, setOpenInsurance] = useState([]);
@@ -91,6 +91,10 @@ const FinancialInformationForm = ({ clientId, onClientCreated }) => {
   const [insuranceFormData, setInsuranceFormData] = useState({});
   const [investmentFormData, setInvestmentFormData] = useState({});
   const [loanFormData, setLoanFormData] = useState({});
+
+
+
+
 
   const handleCheckboxChange = (option, group) => {
     if (group === "insurance") {
@@ -234,9 +238,12 @@ const FinancialInformationForm = ({ clientId, onClientCreated }) => {
       investments: investmentForms,
       loans: loanForms,
     };
-    const result = await dispatch(addFinancialInfo({ clientId, financialData }));
+    
+    const idToUse = clientData && clientData._id || clientId;
+  
+    const result = await dispatch(addFinancialInfo({ clientId:idToUse, financialData }));
     if(result){
-      setInsuranceForms([]);
+    setInsuranceForms([]);
     setInvestmentForms([]);
     setLoanForms([]);
     toast.info("Financial Information Added Successfully....")

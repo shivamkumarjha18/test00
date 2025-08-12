@@ -950,9 +950,9 @@ const CustomerDetail = () => {
                           Future Priorities
                         </h5>
 
-                        {userData?.futurePriorities?.futurePriorities.length > 0 ? (
+                        {userData?.futurePriorities.length > 0 ? (
                           <div className="row">
-                            {userData?.futurePriorities?.futurePriorities.map((priority, index) => (
+                            {userData?.futurePriorities.map((priority, index) => (
                               <div key={priority._id || index} className="col-md-6 col-lg-4 mb-4">
                                 <div className="card h-100 shadow-sm">
                                   <div className="card-header badge bg-info text-dark">
@@ -1007,20 +1007,20 @@ const CustomerDetail = () => {
                         )}
 
                         {/* Summary at the bottom if there are priorities */}
-                        {userData?.futurePriorities?.futurePriorities?.length > 0 && (
+                        {userData?.futurePriorities?.length > 0 && (
                           <div className="mt-4 p-3 bg-light rounded">
                             <div className="row text-center">
                               <div className="col-md-6">
                                 <h6>Total Priorities</h6>
                                 <span className="badge bg-info text-dark">
-                                  {userData?.futurePriorities?.futurePriorities.length}
+                                  {userData?.futurePriorities.length}
                                 </span>
                               </div>
                               <div className="col-md-6">
                                 <h6>Total Estimated Amount</h6>
                                 <span className="text-success fw-bold">
                                   {formatCurrency(
-                                    userData?.futurePriorities?.futurePriorities.reduce(
+                                    userData?.futurePriorities.reduce(
                                       (total, priority) => total + (priority.approxAmount || 0),
                                       0
                                     )

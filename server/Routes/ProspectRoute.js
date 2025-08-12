@@ -1,48 +1,56 @@
+
 const express = require("express");
 const router = express.Router();
-<<<<<<< HEAD
 const ProspectCtrl = require("../Controller/ProspectCtrl");
 const upload = require("../config/upload");
 
-// create prospect
+
+
+// create Prospect
 router.post("/create", ProspectCtrl.createProspect);
 
 // add family members
-router.put("/add/family/:prospectId", ProspectCtrl.addFamilyMember);
+router.put("/add/family/:id", ProspectCtrl.createProspect);
 
 // add financial info
-router.put("/add/financialinfo/:prospectId", ProspectCtrl.addFinancialInfo);
+router.put( "/add/financialinfo/:prospecttId",
+ upload.fields([
+    { name: "insuranceDocuments", maxCount: 10 },
+    { name: "investmentDocuments", maxCount: 10 },
+    { name: "loanDocuments", maxCount: 10 },
+]),
+  ProspectCtrl.addFinancialInfo
+);
+
 
 // add future priotities
-router.put("/add/futurepriorities/:prospectId", ProspectCtrl.addFuturePrioritiesAndNeeds);
+router.put("/add/futurepriorities/:id", ProspectCtrl.addFuturePrioritiesAndNeeds)
+
 
 // add proposed financial plan
-router.put("/add/proposedplan/:prospectId", ProspectCtrl.addProposedFinancialPlan);
+router.put("/add/proposedplan/:id", upload.array("documents"), ProspectCtrl.addProposedFinancialPlan)
 
-// update personal details of the prospect
-router.put("/update/personaldetails/:prospectId", ProspectCtrl.updatePersonalDetails);
+
+
+// update personal details of the suspect
+router.put("/update/personaldetails/:id", ProspectCtrl.updatePersonalDetails);
+
 
 // Get All Prospects
-router.get("/all", ProspectCtrl.getAllProspects);
+router.get("/all", ProspectCtrl.getAllProspects)
+
 
 // Get Prospect by ID
 router.get("/:id", ProspectCtrl.getProspectById);
 
-// Update Prospect Status by ID
-router.put("/update/status/:id", ProspectCtrl.updateProspectStatus);
 
-// Delete Prospect by ID
+// Update Prospect  Status by ID
+router.put("/update/status/:id", ProspectCtrl.updateProspectStatus)
+
+
+// Delete Prospect  by ID
 router.delete("/delete/:id", ProspectCtrl.deleteProspect);
-=======
-const ProspectCtrl = require("../Controller/ProspectLeadCtrl");
 
-router.post("/", ProspectCtrl.createProspectLead); // Create
-router.get("/", ProspectCtrl.getProspectLeads); // Read all
-router.get("/:id", ProspectCtrl.getProspectLeadById); // get by Id
-router.put("/:id", ProspectCtrl.updateProspectLead); // Update
-router.delete("/:id", ProspectCtrl.deleteProspectLead); // Delete
 
-router.put("/status/:id", ProspectCtrl.updateProspectLeadStatus);
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
 
 module.exports = router;

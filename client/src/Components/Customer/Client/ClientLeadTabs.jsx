@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DisplayClient from "./DisplayClient";
-import AddClient from "./AddClient";
+// import AddClient from "./AddClient";
+import ClientForm  from "./ClientFirstFrom"
 
 const ClientLeadTabs = () => {
   const [activeTab, setActiveTab] = useState("add");
@@ -33,7 +34,7 @@ const ClientLeadTabs = () => {
 
       {/* Tab Content */}
       <div  >
-        {activeTab === "add" && <AddClient editId={editId} />}
+        {activeTab === "add" && <ClientForm editId={editId} />}
         {activeTab === "display" && (
           <DisplayClient setActiveTab={setActiveTab} setEditId={setEditId} />
         )}

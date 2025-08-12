@@ -15,6 +15,7 @@ export const createProspect = createAsyncThunk(
   }
 );
 
+
 export const getAllProspects = createAsyncThunk(
   "prospect/getAll",
   async (_, { rejectWithValue }) => {
@@ -27,16 +28,18 @@ export const getAllProspects = createAsyncThunk(
   }
 );
 
-export const getProspectById = createAsyncThunk(
-  "prospect/getById",
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`${API_URL}/${id}`);
+
+
+export const getProspectById = createAsyncThunk("prospect/getById", async(id, {rejectWithValue})=>{
+  try {
+     const response = await axios.get(`${API_URL}/${id}`);
       return response.data.prospect;
-    } catch (error)      return rejectWithValue(error.response?.data || error.message);
-    }
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
   }
-);
+})
+
+
 
 export const addFamilyMemberToProspect = createAsyncThunk(
   "prospect/addFamilyMember",
@@ -97,6 +100,7 @@ export const updateProspectPersonalDetails = createAsyncThunk(
     }
   }
 );
+
 
 export const deleteProspect = createAsyncThunk(
   "prospect/delete",

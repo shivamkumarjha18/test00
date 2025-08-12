@@ -75,8 +75,8 @@ exports.getSuspectById = async (req, res) => {
 // Update a suspect's personal details
 exports.updatePersonalDetails = async (req, res) => {
   try {
-    const { suspectId } = req.params;
-    if (!suspectId) {
+    const { id} = req.params;
+    if (!id) {
       return res.status(400).json({ success: false, message: "Suspect ID is required." });
     }
     const newPersonalDetails = req.body.personalDetails;
@@ -84,7 +84,7 @@ exports.updatePersonalDetails = async (req, res) => {
       return res.status(400).json({ success: false, message: "New personal details are required." });
     }
     const updatedSuspect = await Suspect.findByIdAndUpdate(
-      suspectId,
+      id,
       { $set: { personalDetails: newPersonalDetails } },
       { new: true, runValidators: true }
     );
@@ -104,15 +104,15 @@ exports.updatePersonalDetails = async (req, res) => {
 // Add family members to a suspect
 exports.addFamilyMember = async (req, res) => {
   try {
-    const { suspectId } = req.params;
-    if (!suspectId) {
+    const { id } = req.params;
+    if (! id) {
       return res.status(400).json({ success: false, message: "Please provide suspectId" });
     }
     const membersArray = req.body;
     if (!Array.isArray(membersArray) || membersArray.length === 0) {
       return res.status(400).json({ success: false, message: "Request body must be a non-empty array of family members" });
     }
-    const suspect = await Suspect.findById(suspectId);
+    const suspect = await Suspect.findById(id);
     if (!suspect) {
       return res.status(404).json({ success: false, message: "Suspect not found" });
     }
@@ -131,11 +131,11 @@ exports.addFamilyMember = async (req, res) => {
 // Add financial info to a suspect
 exports.addFinancialInfo = async (req, res) => {
   try {
-    const { suspectId } = req.params;
-    if (!suspectId) {
+    const { id } = req.params;
+    if (!id) {
       return res.status(400).json({ success: false, message: "Suspect ID is required" });
     }
-    const suspect = await Suspect.findById(suspectId);
+    const suspect = await Suspect.findById(id);
     if (!suspect) {
       return res.status(404).json({ success: false, message: "Suspect not found" });
     }
@@ -166,9 +166,9 @@ exports.addFinancialInfo = async (req, res) => {
 // Add future priorities and needs to a suspect
 exports.addFuturePrioritiesAndNeeds = async (req, res) => {
   try {
-    const { suspectId } = req.params;
+    const { id } = req.params;
     const { futurePriorities, needs } = req.body;
-    if (!suspectId) {
+    if (! id) {
       return res.status(400).json({ error: 'Suspect ID is required' });
     }
     const updateData = {};
@@ -176,7 +176,7 @@ exports.addFuturePrioritiesAndNeeds = async (req, res) => {
     if (needs) updateData.needs = needs;
 
     const updatedSuspect = await Suspect.findByIdAndUpdate(
-      suspectId,
+       id,
       updateData,
       { new: true, runValidators: true }
     );
@@ -195,11 +195,11 @@ exports.addFuturePrioritiesAndNeeds = async (req, res) => {
 // Add a proposed financial plan to a suspect
 exports.addProposedFinancialPlan = async (req, res) => {
   try {
-    const { suspectId } = req.params;
-    if (!suspectId) {
+    const {id } = req.params;
+    if (! id) {
       return res.status(400).json({ success: false, message: "Suspect ID is required" });
     }
-    const suspect = await Suspect.findById(suspectId);
+    const suspect = await Suspect.findById(id);
     if (!suspect) {
       return res.status(404).json({ success: false, message: "Suspect not found" });
     }

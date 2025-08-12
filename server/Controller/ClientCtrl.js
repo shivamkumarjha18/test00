@@ -392,6 +392,53 @@ exports.addProposedFinancialPlan = async (req, res) => {
 
 
 // update personal details of the client
+// exports.updatePersonalDetails = async (req, res) => {
+//   try {
+//     const { clientId } = req.params;
+
+//     // 1. Check if the client ID is provided in the URL.
+//     if (!clientId) {
+//       return res.status(400).json({ success: false, message: "Client ID is required." });
+//     }
+    
+//     // 2. Validate that the request body contains the new personalDetails.
+//     const newPersonalDetails = req.body.personalDetails;
+//     if (!newPersonalDetails || Object.keys(newPersonalDetails).length === 0) {
+//       return res.status(400).json({ success: false, message: "New personal details are required in the request body." });
+//     }
+    
+//     // 3. Find the client by ID and update the personalDetails object.
+//     // The '$set' operator is used here to replace the entire 'personalDetails' object.
+//     const updatedClient = await clientModel.findByIdAndUpdate(
+//       clientId,
+//       { $set: { personalDetails: newPersonalDetails } },
+//       { new: true, runValidators: true } // Return the updated document and run schema validators.
+//     );
+
+//     // 4. Handle the case where the client ID is not found.a
+//     if (!updatedClient) {
+//       return res.status(404).json({ success: false, message: "Client not found." });
+//     }
+
+//     // 5. Send a successful response with the updated client document.
+//     res.status(200).json({
+//       success: true,
+//       message: "Personal details updated successfully.",
+//       updatedClient: updatedClient
+//     });
+
+//   } catch (error) {
+//     // 6. Centralized error handling.
+//     console.error("Error updating personal details:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Server error.",
+//       details: error.message
+//     });
+//   }
+// };
+
+
 exports.updatePersonalDetails = async (req, res) => {
   try {
     const { clientId } = req.params;
@@ -402,8 +449,8 @@ exports.updatePersonalDetails = async (req, res) => {
     }
     
     // 2. Validate that the request body contains the new personalDetails.
-    const newPersonalDetails = req.body.personalDetails;
-    if (!newPersonalDetails || Object.keys(newPersonalDetails).length === 0) {
+    const { personalDetails } = req.body;
+    if (!personalDetails || Object.keys(personalDetails).length === 0) {
       return res.status(400).json({ success: false, message: "New personal details are required in the request body." });
     }
     
@@ -411,11 +458,11 @@ exports.updatePersonalDetails = async (req, res) => {
     // The '$set' operator is used here to replace the entire 'personalDetails' object.
     const updatedClient = await clientModel.findByIdAndUpdate(
       clientId,
-      { $set: { personalDetails: newPersonalDetails } },
+      { $set: { personalDetails } },
       { new: true, runValidators: true } // Return the updated document and run schema validators.
     );
 
-    // 4. Handle the case where the client ID is not found.a
+    // 4. Handle the case where the client ID is not found.
     if (!updatedClient) {
       return res.status(404).json({ success: false, message: "Client not found." });
     }
@@ -437,7 +484,6 @@ exports.updatePersonalDetails = async (req, res) => {
     });
   }
 };
-
 
 
 

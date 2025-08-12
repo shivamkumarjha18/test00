@@ -19,7 +19,8 @@ import OccupationType from "../Components/Masters/Leads/OccupationType";
 import CustomerDetail from "../Components/Customer/CustomerDetail";
 import ProspectDetail from "../Components/Customer/Prospect/ProspectDetail";
 import SuspectDetail from "../Components/Customer/Suspect/SuspectDetail";
-import AddClient from "../Components/Customer/Client/AddClient";
+// import AddClient from "../Components/Customer/Client/AddClient";
+import ClientFirstFrom from "../Components/Customer/Client/ClientFirstFrom";
 import AddProspect from "../Components/Customer/Prospect/AddProspect";
 import AddSuspect from "../Components/Customer/Suspect/AddSuspect";
 import ClientLeadTabs from "../Components/Customer/Client/ClientLeadTabs";
@@ -64,9 +65,9 @@ const AppRoutes = () => {
 
         {/* Customer */}
         <Route path="/client" element={<ClientLeadTabs />} />
-        <Route path="/client/add" element={<AddClient />} />
-        <Route path="/client/edit/:id" element={<AddClient />} />
-        <Route path="/client/:id" element={<CustomerDetail />} />
+        <Route path="/client/add" element={<ClientFirstFrom/>} />
+        <Route path="/client/edit/:id" element={<ClientFirstFrom/>} />
+        <Route path="/client/detail/:id" element={<CustomerDetail />} />
 
         <Route path="/prospect" element={<ProspectLeadTabs />} />
         <Route path="/prospect/add" element={<AddProspect />} />

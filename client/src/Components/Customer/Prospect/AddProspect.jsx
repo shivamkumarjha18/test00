@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import PersonalDetailsForm from "../Client/PersonalDetailsForm";
 import FamilyMembersForm from "../Client/FamilyMembersForm";
-import FinancialInfoForm from "../Client/FinancialInfoForm";
+import FinancialInfoForm from "../Client/FinancialInformationForm";
 import FuturePrioritiesForm from "../Client/FuturePrioritiesForm";
 import ProposedPlanForm from "../Client/ProposedPlanForm";
 

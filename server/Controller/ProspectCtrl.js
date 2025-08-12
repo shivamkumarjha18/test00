@@ -75,8 +75,8 @@ exports.getProspectById = async (req, res) => {
 // Update a prospect's personal details
 exports.updatePersonalDetails = async (req, res) => {
   try {
-    const { prospectId } = req.params;
-    if (!prospectId) {
+    const { id } = req.params;
+    if (! id) {
       return res.status(400).json({ success: false, message: "Prospect ID is required." });
     }
     const newPersonalDetails = req.body.personalDetails;
@@ -84,7 +84,7 @@ exports.updatePersonalDetails = async (req, res) => {
       return res.status(400).json({ success: false, message: "New personal details are required." });
     }
     const updatedProspect = await Prospect.findByIdAndUpdate(
-      prospectId,
+       id,
       { $set: { personalDetails: newPersonalDetails } },
       { new: true, runValidators: true }
     );
@@ -104,15 +104,15 @@ exports.updatePersonalDetails = async (req, res) => {
 // Add family members to a prospect
 exports.addFamilyMember = async (req, res) => {
   try {
-    const { prospectId } = req.params;
-    if (!prospectId) {
+    const {id } = req.params;
+    if (! id) {
       return res.status(400).json({ success: false, message: "Please provide prospectId" });
     }
     const membersArray = req.body;
     if (!Array.isArray(membersArray) || membersArray.length === 0) {
       return res.status(400).json({ success: false, message: "Request body must be a non-empty array of family members" });
     }
-    const prospect = await Prospect.findById(prospectId);
+    const prospect = await Prospect.findById(id);
     if (!prospect) {
       return res.status(404).json({ success: false, message: "Prospect not found" });
     }
@@ -131,11 +131,11 @@ exports.addFamilyMember = async (req, res) => {
 // Add financial info to a prospect
 exports.addFinancialInfo = async (req, res) => {
   try {
-    const { prospectId } = req.params;
-    if (!prospectId) {
+    const { id } = req.params;
+    if (! id) {
       return res.status(400).json({ success: false, message: "Prospect ID is required" });
     }
-    const prospect = await Prospect.findById(prospectId);
+    const prospect = await Prospect.findById(id);
     if (!prospect) {
       return res.status(404).json({ success: false, message: "Prospect not found" });
     }
@@ -166,9 +166,9 @@ exports.addFinancialInfo = async (req, res) => {
 // Add future priorities and needs to a prospect
 exports.addFuturePrioritiesAndNeeds = async (req, res) => {
   try {
-    const { prospectId } = req.params;
+    const { id} = req.params;
     const { futurePriorities, needs } = req.body;
-    if (!prospectId) {
+    if (!id) {
       return res.status(400).json({ error: 'Prospect ID is required' });
     }
     const updateData = {};
@@ -176,7 +176,7 @@ exports.addFuturePrioritiesAndNeeds = async (req, res) => {
     if (needs) updateData.needs = needs;
 
     const updatedProspect = await Prospect.findByIdAndUpdate(
-      prospectId,
+       id,
       updateData,
       { new: true, runValidators: true }
     );
@@ -195,12 +195,12 @@ exports.addFuturePrioritiesAndNeeds = async (req, res) => {
 // Add a proposed financial plan to a prospect
 exports.addProposedFinancialPlan = async (req, res) => {
   try {
-    const { prospectId } = req.params;
-    if (!prospectId) {
+    const { id} = req.params;
+    if (!id) {
       return res.status(400).json({ success: false, message: "Prospect ID is required" });
     }
-    const prospect = await Prospect.findById(prospectId);
-    if (!prospect) {
+    const prospect = await Prospect.findById(id);
+    if (!id) {
       return res.status(404).json({ success: false, message: "Prospect not found" });
     }
     const newProposedPlan = req.body;

@@ -1,3 +1,5 @@
+
+
 const mongoose = require("mongoose");
 
 // Reuse sub-documents
@@ -59,7 +61,7 @@ const financialInfoSchema = new mongoose.Schema({
       amount: { type: Number, required: true },
       startDate: { type: Date, required: true },
       maturityDate: { type: Date, required: true },
-       document: { type: String, default: null }
+      document: { type: String, default: null }
     },
   ],
   loans: [
@@ -74,7 +76,6 @@ const financialInfoSchema = new mongoose.Schema({
       term: { type: String, required: true },
       startDate: { type: Date, required: true },
       maturityDate: { type: Date, required: true },
-      
     },
   ],
 });
@@ -90,18 +91,6 @@ const needsSchema = new mongoose.Schema({
   purchaseNewProducts: Boolean,
 });
 
-// const futurePrioritiesSchema = new mongoose.Schema({
-//   futurePriorities: [
-//     {
-//       priorityName: { type: String, required: true },
-//       members: { type: [String], required: true },
-//       approxAmount: { type: Number, required: true },
-//       duration: { type: String, required: true },
-//       remark: { type: String },
-//     },
-//   ],
-// });
-
 const proposedPlanSchema = new mongoose.Schema({
   createdDate: { type: Date, required: true },
   memberName: { type: String, required: true },
@@ -116,32 +105,37 @@ const personalDetailsSchema = new mongoose.Schema({
   groupName: {
     type: String,
     required: function () {
-<<<<<<< HEAD
-      const parent = this.ownerDocument();
-      return ['prospect', 'suspect'].includes(parent.status);
-    },
-  },
-  gender: String,
-  salutation: {
-    type: String,
-    required: function () {
-      const parent = this.ownerDocument();
-      return ['prospect', 'suspect'].includes(parent.status);
-=======
-      return ["suspect", "prospect"].includes(this.parent().status);
+        return ["suspect", "prospect"].includes(this.parent()?.status);
     },
   },
   gender: {
     type: String,
     required: function () {
-      return ["suspect", "prospect"].includes(this.parent().status);
+        return ["suspect", "prospect"].includes(this.parent()?.status);
     },
   },
   salutation: {
     type: String,
     required: function () {
-      return ["suspect", "prospect"].includes(this.parent().status);
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
+        return ["suspect", "prospect"].includes(this.parent()?.status);
+    },
+  },
+  mobileNo: {
+    type: Number,
+    required: function () {
+        return ["suspect", "prospect"].includes(this.parent()?.status);
+    },
+  },
+  emailId: {
+    type: String,
+    required: function () {
+        return ["suspect", "prospect"].includes(this.parent()?.status);
+    },
+  },
+  name: {
+    type: String,
+    required: function () {
+        return ["suspect", "prospect"].includes(this.parent()?.status);
     },
   },
   organisation: String,
@@ -149,30 +143,8 @@ const personalDetailsSchema = new mongoose.Schema({
   annualIncome: String,
   grade: Number,
   familyHead: String,
-  mobileNo: {
-    type: Number,
-    required: function () {
-<<<<<<< HEAD
-      const parent = this.ownerDocument();
-      return ['prospect', 'suspect'].includes(parent.status);
-=======
-      return ["suspect", "prospect"].includes(this.parent().status);
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
-    },
-  },
   contactNo: Number,
   whatsappNo: Number,
-  emailId: {
-    type: String,
-    required: function () {
-<<<<<<< HEAD
-      const parent = this.ownerDocument();
-      return ['prospect', 'suspect'].includes(parent.status);
-=======
-      return ["suspect", "prospect"].includes(this.parent().status);
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
-    },
-  },
   paName: String,
   paMobileNo: Number,
   adharNumber: String,
@@ -199,17 +171,6 @@ const personalDetailsSchema = new mongoose.Schema({
   leadOccupationType: String,
   occupation: String,
   callingPurpose: String,
-  name: {
-    type: String,
-    required: function () {
-<<<<<<< HEAD
-      const parent = this.ownerDocument();
-      return ['prospect', 'suspect'].includes(parent.status);
-=======
-      return ["suspect", "prospect"].includes(this.parent().status);
->>>>>>> c8eddd2 (Completed clients full forms with backend and redux as well as clients tab status and delete)
-    },
-  },
   allocatedCRE: String,
   remark: String,
   pincode: Number,
@@ -241,8 +202,7 @@ const TestShema = new mongoose.Schema({
   preferences: {},
   familyMembers: [familyMemberSchema],
   financialInfo: financialInfoSchema,
-  // futurePriorities: futurePrioritiesSchema,
-   futurePriorities: [
+  futurePriorities: [
     {
       priorityName: { type: String, required: true },
       members: { type: [String], required: true },
