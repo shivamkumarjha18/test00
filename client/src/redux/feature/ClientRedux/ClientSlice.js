@@ -10,7 +10,8 @@ import {
   getClientById,
   updateCleintStatus,
   updateClientPersonalDetails,
-  deleteClientById
+  deleteClientById,
+  getAllFamilyMembers
 } from "./ClientThunx";
 
 
@@ -27,6 +28,7 @@ const initialState = {
   proposedPlan: null,
   clients: [],
   singleClient: null,
+  familyMembers : [],
 };
 
 
@@ -202,6 +204,20 @@ const clientSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
 
+      })
+      .addCase(getAllFamilyMembers.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getAllFamilyMembers.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.success = true;
+        state.familyMembers = action.payload
+      })
+      .addCase(getAllFamilyMembers.rejected, (state, action)=>{
+        state.loading = false;
+        state.error = action.payload;
       })
   },
 });

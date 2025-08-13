@@ -193,3 +193,23 @@ export const deleteClientById = createAsyncThunk(
   }
 )
 
+
+
+
+// 11 getAllFamilyMembers
+export const getAllFamilyMembers = createAsyncThunk(
+  "family/getAllFamilyMembers",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/client/family/details/${id}`);
+      console.log("Family members fetched successfully", response?.data);
+      return response?.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message || "An error occurred while fetching family members."
+      );
+    }
+  }
+);
+
+

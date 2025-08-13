@@ -29,6 +29,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {getClientById } from "../../redux/feature/ClientRedux/ClientThunx";
+import TasksTab from "./TaskTab";
 
 const CustomerDetail = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -119,7 +120,7 @@ const CustomerDetail = () => {
     init();
   }, []);
 
-  //
+
   const addChecklist = () => {
     setChecklists([...checklists, { name: "", file: null }]);
   };
@@ -196,6 +197,7 @@ const CustomerDetail = () => {
     newChecklists[index] = e.target.value;
     setTextChecklists(newChecklists);
   };
+
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
     const today = new Date();
@@ -233,22 +235,7 @@ const CustomerDetail = () => {
           <div className="profile-grid">
             {/* Profile Card */}
             <div className="profile-card">
-              <div className="profile-image-container">
-                <img
-                  // src={userData.image}
-                  src={"https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
-                  alt="User profile"
-                  className="profile-image rounded-full"
-                />
-                <div className="profile-actions">
-                  <button className="btn-icon">
-                    <FiUpload size={16} />
-                  </button>
-                  <button className="btn-icon">
-                    <FiDownload size={16} />
-                  </button>
-                </div>
-              </div>
+             
 
               <div className="profile-info">
                 <h2 className="profile-name">{userData?.personalDetails?.name}</h2>
@@ -268,7 +255,7 @@ const CustomerDetail = () => {
                   </div>
                 </div>
 
-                {/* kyc */}
+                
 
                 <div className="profile-details">
                   <div className="detail-item">
@@ -455,7 +442,7 @@ const CustomerDetail = () => {
                 </div>
               </div>
 
-              {/* Tabs Section */}
+             
               <div className="tabs-container">
                 <Tabs
                   selectedIndex={tabIndex}
@@ -495,13 +482,8 @@ const CustomerDetail = () => {
                       <FaBullseye className="tab-icon" />
                       <span>Proposal Financial Plan"</span>
                     </Tab>
-                    {/* <Tab
-                      className={`custom-tab ${tabIndex === 5 ? "active" : ""}`}
-                    >
-                      <FaTasks className="tab-icon" />
-                      <span>Task Details</span>
-                    </Tab> */}
-                    <Tab className={`custom-tab ${tabIndex === 6 ? "active" : ""}`}>
+                   
+                    <Tab className={`custom-tab ${tabIndex === 5 ? "active" : ""}`}>
 
                       <FaTasks className="tab-icon" />
                       <span>Kyc</span>
@@ -509,8 +491,18 @@ const CustomerDetail = () => {
                     </Tab>
 
 
+                     <Tab
+                      className={`custom-tab ${tabIndex === 6 ? "active" : ""}`}
+                    >
+                      <FaTasks className="tab-icon" />
+                      <span>Tasks</span>
+                    </Tab>
+
+
                   </TabList>
 
+
+                  {/* // personal Details tab */}
                   <TabPanel>
                     <div className="profile-details-container p-4">
                       <div className="row g-4">
@@ -701,7 +693,8 @@ const CustomerDetail = () => {
                     </div>
                   </TabPanel>
 
-                  {/* fmily membwr */}
+
+                  {/* fmily members tab */}
                   <TabPanel>
                     <div className="tab-content">
 
@@ -759,7 +752,7 @@ const CustomerDetail = () => {
                   </TabPanel>
 
 
-
+                   {/* // financial tab    */}
                   <TabPanel>
                     <div className="tab-content">
                       <h3>Financial Overview</h3>
@@ -799,9 +792,233 @@ const CustomerDetail = () => {
                   </TabPanel>
 
 
-                  {/* model open */}
+              
+                   {/* // future priorities  */}
+                  <TabPanel>
+                    <div className="">
+                      <div className="card-body mb-5">
+                        <h5 className="card-title p-3 border-bottom pb-2 mb-2">
+                          Future Priorities
+                        </h5>
+
+                        {userData?.futurePriorities.length > 0 ? (
+                          <div className="row">
+                            {userData?.futurePriorities.map((priority, index) => (
+                              <div key={priority._id || index} className="col-md-6 col-lg-4 mb-4">
+                                <div className="card h-100 shadow-sm">
+                                  <div className="card-header badge bg-info text-dark">
+                                    <h6 className="mb-0">{priority.priorityName || 'Unnamed Priority'}</h6>
+                                  </div>
+                                  <div className="card-body">
+                                    <div className="mb-3">
+                                      <strong>Approximate Amount:</strong>
+                                      <div className="text-success fs-5">
+                                        {priority.approxAmount ? formatCurrency(priority.approxAmount) : 'Not specified'}
+                                      </div>
+                                    </div>
+
+                                    <div className="mb-3">
+                                      <strong>Duration:</strong>
+                                      <div>{priority.duration || 'Not specified'}</div>
+                                    </div>
+
+                                    <div className="mb-3">
+                                      <strong>Members:</strong>
+                                      <div>
+                                        {priority.members && priority.members.length > 0 ? (
+                                          priority.members.map((member, memberIndex) => (
+                                            <span key={memberIndex} className="badge bg-info text-dark me-1 mb-1">
+                                              {member}
+                                            </span>
+                                          ))
+                                        ) : (
+                                          'Not specified'
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    {priority.remark && (
+                                      <div className="mb-2">
+                                        <strong>Remark:</strong>
+                                        <div className="text-muted small">{priority.remark}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-4">
+                            <div className="alert alert-info">
+
+                              <p className="mb-0 text-muted">No future priorities have been added yet.</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Summary at the bottom if there are priorities */}
+                        {userData?.futurePriorities?.length > 0 && (
+                          <div className="mt-4 p-3 bg-light rounded">
+                            <div className="row text-center">
+                              <div className="col-md-6">
+                                <h6>Total Priorities</h6>
+                                <span className="badge bg-info text-dark">
+                                  {userData?.futurePriorities.length}
+                                </span>
+                              </div>
+                              <div className="col-md-6">
+                                <h6>Total Estimated Amount</h6>
+                                <span className="text-success fw-bold">
+                                  {formatCurrency(
+                                    userData?.futurePriorities.reduce(
+                                      (total, priority) => total + (priority.approxAmount || 0),
+                                      0
+                                    )
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </TabPanel>
 
 
+
+                  {/* //proposedPlan */}
+                    <TabPanel>
+  <div className="tab-content p-4">
+    <div className="d-flex justify-content-between align-items-center mb-4">
+      <h3 className=" fw-bold mb-0">
+        <i className="bi bi-graph-up-arrow me-2"></i>
+        Proposed Financial Plans
+      </h3>
+      <span className="badge bg-info text-dark fs-6 px-3 py-2">
+        {userData?.proposedPlan?.length || 0} Plans
+      </span>
+    </div>
+
+    {userData?.proposedPlan && userData?.proposedPlan?.length > 0 ? (
+      <>
+        <div className="row">
+          {userData?.proposedPlan?.map((plan, index) => {
+            return (
+              <div className="col-lg-6 col-xl-4 mb-4" key={index}>
+                <div className="card h-100 shadow-sm border-0 position-relative overflow-hidden">
+                  <div className="card-header bg-gradient-primary text-white border-0 py-3 badge bg-info text-dark">
+                    <div className="d-flex justify-content-between align-items-center ">
+                      <h6 className="mb-0 fw-bold">
+                        <i className="bi bi-file-earmark-text me-2"></i>
+                        Plan {index + 1}
+                      </h6>
+                    
+                    </div>
+                  </div>
+                  
+                  <div className="card-body p-4">
+                    <div className="row g-3">
+                      <div className="col-12">
+                        <div className="p-3 bg-light rounded-3">
+                          <small className="text-muted fw-medium">Created On</small>
+                          <div className="fw-bold text-dark">{formatDate(plan?.createdDate)}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="col-12">
+                        <div className="p-3 bg-light rounded-3">
+                          <small className="text-muted fw-medium">Member Name</small>
+                          <div className="fw-bold text-dark">{plan?.memberName || 'N/A'}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="col-12">
+                        <div className="p-3 bg-light rounded-3">
+                          <small className="text-muted fw-medium">Financial Product</small>
+                          <div className="fw-bold text-dark">{plan?.financialProduct || 'N/A'}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="col-12">
+                        <div className="p-3 bg-light rounded-3">
+                          <small className="text-muted fw-medium">Plan Name</small>
+                          <div className="fw-bold text-dark">{plan?.planName || 'N/A'}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                 
+                  
+                  
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </>
+    ) : (
+      <div className="text-center py-5">
+        <div className="mb-4">
+          <i className="bi bi-inbox display-1 text-muted"></i>
+        </div>
+        <div className="alert alert-info border-0 shadow-sm mx-auto" style={{maxWidth: '400px'}}>
+          <h5 className="alert-heading mb-2">
+            <i className="bi bi-info-circle me-2"></i>
+            No Plans Available
+          </h5>
+          <p className="mb-0">No Proposed Financial Plans have been added yet. Create your first plan to get started!</p>
+        </div>
+        <button className="btn btn-primary mt-3">
+          <i className="bi bi-plus-circle me-2"></i>
+          Add New Plan
+        </button>
+      </div>
+    )}
+  </div>
+
+  <style jsx>{`
+    
+    .card {
+      transition: all 0.3s ease;
+      border-radius: 12px !important;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    }
+    
+    .rounded-circle {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .bg-light {
+      background-color: #f8f9fa !important;
+      border: 1px solid #e9ecef;
+    }
+  `}</style>
+                   </TabPanel>
+
+                   
+                   {/* // kyc tab */}
+                   <TabPanel>
+                    <KycComponent id={id} familyMembers={userData?.familyMembers} />
+                  </TabPanel>
+
+
+                   {/* // tasks tab */}
+                   <TabPanel>
+                    <TasksTab/>
+                  </TabPanel>
+                  
+
+                     {/* model open */}
                   <Modal
                     show={showModal}
                     onHide={handleCloseModal}
@@ -941,305 +1158,7 @@ const CustomerDetail = () => {
                   </Modal>
 
 
-
-
-                  <TabPanel>
-                    <div className="">
-                      <div className="card-body mb-5">
-                        <h5 className="card-title p-3 border-bottom pb-2 mb-2">
-                          Future Priorities
-                        </h5>
-
-                        {userData?.futurePriorities.length > 0 ? (
-                          <div className="row">
-                            {userData?.futurePriorities.map((priority, index) => (
-                              <div key={priority._id || index} className="col-md-6 col-lg-4 mb-4">
-                                <div className="card h-100 shadow-sm">
-                                  <div className="card-header badge bg-info text-dark">
-                                    <h6 className="mb-0">{priority.priorityName || 'Unnamed Priority'}</h6>
-                                  </div>
-                                  <div className="card-body">
-                                    <div className="mb-3">
-                                      <strong>Approximate Amount:</strong>
-                                      <div className="text-success fs-5">
-                                        {priority.approxAmount ? formatCurrency(priority.approxAmount) : 'Not specified'}
-                                      </div>
-                                    </div>
-
-                                    <div className="mb-3">
-                                      <strong>Duration:</strong>
-                                      <div>{priority.duration || 'Not specified'}</div>
-                                    </div>
-
-                                    <div className="mb-3">
-                                      <strong>Members:</strong>
-                                      <div>
-                                        {priority.members && priority.members.length > 0 ? (
-                                          priority.members.map((member, memberIndex) => (
-                                            <span key={memberIndex} className="badge bg-info text-dark me-1 mb-1">
-                                              {member}
-                                            </span>
-                                          ))
-                                        ) : (
-                                          'Not specified'
-                                        )}
-                                      </div>
-                                    </div>
-
-                                    {priority.remark && (
-                                      <div className="mb-2">
-                                        <strong>Remark:</strong>
-                                        <div className="text-muted small">{priority.remark}</div>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="text-center py-4">
-                            <div className="alert alert-info">
-
-                              <p className="mb-0 text-muted">No future priorities have been added yet.</p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Summary at the bottom if there are priorities */}
-                        {userData?.futurePriorities?.length > 0 && (
-                          <div className="mt-4 p-3 bg-light rounded">
-                            <div className="row text-center">
-                              <div className="col-md-6">
-                                <h6>Total Priorities</h6>
-                                <span className="badge bg-info text-dark">
-                                  {userData?.futurePriorities.length}
-                                </span>
-                              </div>
-                              <div className="col-md-6">
-                                <h6>Total Estimated Amount</h6>
-                                <span className="text-success fw-bold">
-                                  {formatCurrency(
-                                    userData?.futurePriorities.reduce(
-                                      (total, priority) => total + (priority.approxAmount || 0),
-                                      0
-                                    )
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </TabPanel>
-
-
-
-
-
-                  {/* // proposed plan tab */}
-                <TabPanel>
-                    <div className="tab-content p-4">
-                      <h3 className="mb-4 border-bottom pb-2">
-                        Proposed Financial Plan
-                      </h3>
-
-                      {userData?.proposedPlan ? (
-                        <>
-                          <div className="card shadow-sm mb-4">
-                            <div className="card-body">
-                              <div className="row">
-                                {Object.entries(userData.proposedPlan)
-                                  .filter(([key]) => !["_id", "__v"].includes(key))
-                                  .map(([key, value]) => {
-                                    let displayValue = value;
-
-                                    // Handle upload/document fields separately
-                                    if (key === "upload" || key === "document" || key === "file") {
-                                      displayValue = (
-                                        <div>
-                                          {Array.isArray(value) ? (
-                                            value.map((file, index) => (
-                                              <img
-                                                key={index}
-                                                src={file}
-                                                alt={`Document ${index + 1}`}
-                                                style={{
-                                                  maxWidth: '150px',
-                                                  maxHeight: '150px',
-                                                  objectFit: 'cover',
-                                                  marginRight: '10px',
-                                                  marginBottom: '10px',
-                                                  border: '1px solid #ddd',
-                                                  borderRadius: '4px',
-                                                  cursor: 'pointer'
-                                                }}
-                                                onClick={() => window.open(file, '_blank')}
-                                              />
-                                            ))
-                                          ) : value ? (
-                                            <img
-                                              src={value}
-                                              alt="Document"
-                                              style={{
-                                                maxWidth: '150px',
-                                                maxHeight: '150px',
-                                                objectFit: 'cover',
-                                                border: '1px solid #ddd',
-                                                borderRadius: '4px',
-                                                cursor: 'pointer'
-                                              }}
-                                              onClick={() => window.open(value, '_blank')}
-                                            />
-                                          ) : 'No document'}
-                                        </div>
-                                      );
-                                    }
-                                    // Handle different data types
-                                    else if (dateFields.includes(key)) {
-                                      displayValue = formatDate(value);
-                                    } else if (currencyFields.includes(key)) {
-                                      displayValue = formatCurrency(value);
-                                    } else if (Array.isArray(value)) {
-                                      displayValue = value.length > 0 ? (
-                                        <div>
-                                          {value.map((item, index) => (
-                                            <span key={index} className="badge bg-info text-dark me-1 mb-1">
-                                              {typeof item === 'object' ? JSON.stringify(item) : item}
-                                            </span>
-                                          ))}
-                                        </div>
-                                      ) : 'No items';
-                                    } else if (typeof value === "object" && value !== null) {
-                                      // Handle nested objects
-                                      displayValue = (
-                                        <div className="ms-2">
-                                          {Object.entries(value).map(([nestedKey, nestedValue]) => (
-                                            <div key={nestedKey} className="small">
-                                              <strong>{formatFieldName(nestedKey)}:</strong> {
-                                                currencyFields.includes(nestedKey)
-                                                  ? formatCurrency(nestedValue)
-                                                  : dateFields.includes(nestedKey)
-                                                    ? formatDate(nestedValue)
-                                                    : nestedValue?.toString() || 'N/A'
-                                              }
-                                            </div>
-                                          ))}
-                                        </div>
-                                      );
-                                    } else if (typeof value === 'boolean') {
-                                      displayValue = (
-                                        <span className={`badge ${value ? 'bg-success' : 'bg-secondary'}`}>
-                                          {value ? 'Yes' : 'No'}
-                                        </span>
-                                      );
-                                    }
-
-                                    return (
-                                      <div className="col-md-6 mb-3" key={key}>
-                                        <div className="d-flex flex-column">
-                                          <span className="fw-bold text-primary mb-1">
-                                            {formatFieldName(key)}:
-                                          </span>
-                                          <span className="text-dark ms-2">
-                                            {typeof displayValue === 'object' ? displayValue : (displayValue?.toString() || "N/A")}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                              </div>
-                            </div>
-                          </div>
-
-
-                        </>
-                      ) : (
-                        <div className="alert alert-info">
-                          <i className="bi bi-info-circle me-2"></i>
-                          No Proposed Plans Added yet.
-                        </div>
-                      )}
-                    </div>
-                  </TabPanel>
-
-                 
-                 
-
-
-
-                  {/* task  tab */}
-
-                  {/* <TabPanel>
-                    <div className="tab-content">
-                      <h3>Tasks & Follow-ups</h3>
-                      <div className="task-list">
-                        <div className="task-item">
-                          <div className="task-checkbox">
-                            <input type="checkbox" id="task1" />
-                          </div>
-                          <div className="task-content">
-                            <label htmlFor="task1">
-                              Policy renewal discussion
-                            </label>
-                            <p className="task-meta">
-                              Due: Tomorrow • High Priority
-                            </p>
-                          </div>
-                          <div className="task-actions">
-                            <button className="btn-icon">
-                              <FiTrash2 size={16} />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="task-item">
-                          <div className="task-checkbox">
-                            <input type="checkbox" id="task2" checked />
-                          </div>
-                          <div className="task-content">
-                            <label htmlFor="task2" className="completed">
-                              Submit health documents
-                            </label>
-                            <p className="task-meta">Completed: 2 days ago</p>
-                          </div>
-                          <div className="task-actions">
-                            <button className="btn-icon">
-                              <FiTrash2 size={16} />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="task-item">
-                          <div className="task-checkbox">
-                            <input type="checkbox" id="task3" />
-                          </div>
-                          <div className="task-content">
-                            <label htmlFor="task3">
-                              Discuss new investment options
-                            </label>
-                            <p className="task-meta">
-                              Due: Next week • Medium Priority
-                            </p>
-                          </div>
-                          <div className="task-actions">
-                            <button className="btn-icon">
-                              <FiTrash2 size={16} />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="add-task">
-                          <input type="text" placeholder="Add new task..." />
-                          <button className="btn-primary">Add</button>
-                        </div>
-                      </div>
-                    </div>
-                  </TabPanel> */}
-
-
-
-                  <TabPanel>
-                    <KycComponent id={id} />
-                  </TabPanel>
+                  
 
                 </Tabs>
               </div>

@@ -361,8 +361,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createKyc, deleteKyc, fetchKycsByClient, updateKyc } from "../../../redux/feature/ClientRedux/KycThunx";
 import { toast } from "react-toastify";
 
-const KYCComponent = ({ id }) => {
+const KYCComponent = ({ id, familyMembers }) => {
   console.log("Client ID received", id);
+  console.log("family memebers", familyMembers)
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [kycData, setKycData] = useState([]);
@@ -534,10 +535,15 @@ const KYCComponent = ({ id }) => {
                 required={!editMode}
               >
                 <option value="">Select Member</option>
-                <option>VINOD</option>
+                {
+                  familyMembers?.map((member)=>{
+                    return <option>{member?.name}</option>
+                  })
+                }
+                {/* <option>VINOD</option>
                 <option>Priti</option>
                 <option>abhay</option>
-                <option>anaya</option>
+                <option>anaya</option> */}
               </Form.Select>
             </Form.Group>
 

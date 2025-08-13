@@ -47,6 +47,10 @@ router.get("/:id", ClientCtrl.getClientById);
 router.put("/update/status/:id",  ClientCtrl.updateClientStatus)
 
 
+// Get all Family Members
+router.get("/family/details/:id", ClientCtrl.getAllFamilyMembers)
+
+
 // Create new KYC (pass clientId as query or param)
 router.post('/kyc/create/:clientId', upload.single('document'), ClientCtrl.createKyc);
 
@@ -65,6 +69,7 @@ router.put('/kyc/:id', upload.single('document'), ClientCtrl.updateKyc);
 
 // Delete a KYC
 router.delete('/kyc/:id', ClientCtrl.deleteKyc);
+
 
 
 

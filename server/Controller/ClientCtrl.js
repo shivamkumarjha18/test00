@@ -571,6 +571,47 @@ exports.deleteClient = async(req, res)=>{
 
 
 
+
+  // Get All Family Members
+  exports.getAllFamilyMembers = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide Client ID"
+      });
+    }
+
+    const client = await clientModel.findById(id).select("familyMembers");
+
+    if (!client) {
+      return res.status(404).json({
+        success: false,
+        message: "Client not found for this ID"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Family members fetched successfully",
+      data: client.familyMembers
+    });
+
+  } catch (error) {
+    console.error("Error in fetching all family members:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching family members"
+    });
+  }
+};
+
+
+
+
+
   // CREATE a new KYC
 exports.createKyc = async (req, res) => {
   try {
