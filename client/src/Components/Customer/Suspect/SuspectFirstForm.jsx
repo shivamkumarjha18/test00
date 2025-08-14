@@ -1,30 +1,27 @@
 
-
-
-
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { createClient, updateClientPersonalDetails, getClientById } from "../../../redux/feature/ClientRedux/ClientThunx";
+import { getSuspectById} from "../../../redux/feature/SuspectRedux/SuspectThunx";
 import { fetchDetails } from "../../../redux/feature/LeadSource/LeadThunx";
 import { fetchOccupations } from "../../../redux/feature/OccupationType/OccupationThunx";
 import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
 import { useNavigate, useParams } from "react-router-dom";
-import PersonalDetailsForm from "./PersonalDetailsForm";
-import FamilyMembersForm from "./FamilyMembersForm";
-import FinancialInformationForm from "./FinancialInformationForm";
-import FuturePrioritiesForm from "./FuturePrioritiesForm";
-import ProposedPlanForm from "./ProposedPlanForm";
+import PersonalDetailsForm from "./PersonalDetailFormSuspect";
+import FamilyMembersForm from "./FamilyMembersFormSuspect";
+import FinancialInformationForm from "./FinancialInformationFormSuspect";
+import FuturePrioritiesForm from "./FuturePrioritiesFromSuspect";
+import ProposedPlanForm from "./ProposedPanFormSuspect";
 import { FaUser, FaUsers, FaRupeeSign, FaBullseye } from "react-icons/fa";
 
-const ClientFirstFrom = () => {
+const SuspectFirstForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("personal");
-  const [clientId, setClientId] = useState(id || "");
+  const [suspectId, setSuspectId] = useState(id || "");
   const [isEdit, setIsEdit] = useState(false);
-  const [clientData, setClientData] = useState(null);
+  const [suspectData, setSuspectData] = useState(null);
 
   useEffect(() => {
     dispatch(fetchLeadOccupationDetails());
@@ -33,9 +30,9 @@ const ClientFirstFrom = () => {
 
     if (id) {
       setIsEdit(true);
-      dispatch(getClientById(id)).then((response) => {
-        if (response?.payload?.client) {
-          setClientData(response?.payload?.client);
+      dispatch(getSuspectById(id)).then((response) => {
+        if (response?.payload?.suspect) {
+          setSuspectData(response?.payload?.suspect);
         }
       });
     }
@@ -45,8 +42,8 @@ const ClientFirstFrom = () => {
     setActiveTab(tab);
   };
 
-  const handleClientCreated = (newClientId) => {
-    setClientId(newClientId);
+  const handleSuspectCreated = (newSuspectId) => {
+    setSuspectId(newSuspectId);
   };
 
   return (
@@ -98,35 +95,35 @@ const ClientFirstFrom = () => {
         {activeTab === "personal" && (
           <PersonalDetailsForm
             isEdit={isEdit}
-            clientData={clientData}
-            onClientCreated={handleClientCreated}
+            suspectData={suspectData}
+            onSuspectCreated={handleSuspectCreated}
           />
         )}
         {activeTab === "family" && (
           <FamilyMembersForm
-            clientId={clientId}
-            clientData={isEdit ? clientData : null}
-            onClientCreated={handleClientCreated}
+            suspectId={suspectId}
+            suspectData={isEdit ? suspectData : null}
+            onSuspectCreated={handleSuspectCreated}
           />
         )}
         {activeTab === "financial" && (
           <FinancialInformationForm
-            clientId={clientId}
-            clientData={isEdit ? clientData : null}
-            onClientCreated={handleClientCreated}
+            suspectId={suspectId}
+            suspectData={isEdit ? suspectData : null}
+            onSuspectCreated={handleSuspectCreated}
           />
         )}
         {activeTab === "priorities" && (
           <FuturePrioritiesForm
-            clientId={clientId}
-            clientData={isEdit ? clientData : null}
-            onClientCreated={handleClientCreated}
+            suspectId={suspectId}
+            suspectData={isEdit ? suspectData : null}
+            onSuspectCreated={handleSuspectCreated}
           />
         )}
         {activeTab === "proposed" && (
           <ProposedPlanForm
-            clientId={clientId}
-            clientData={isEdit ? clientData : null}
+            suspectId={suspectId}
+            suspectData={isEdit ? suspectData : null}
           />
         )}
       </div>
@@ -134,4 +131,4 @@ const ClientFirstFrom = () => {
   );
 };
 
-export default ClientFirstFrom;
+export default SuspectFirstForm;

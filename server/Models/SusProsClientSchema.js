@@ -339,42 +339,48 @@ const proposedPlanSchema = new mongoose.Schema({
 
 const personalDetailsSchema = new mongoose.Schema({
   groupCode: String,
-  groupName: {
-    type: String,
-    required: function () {
-        return ["suspect", "prospect"].includes(this.parent()?.status);
-    },
-  },
-  gender: {
-    type: String,
-    required: function () {
-        return ["suspect", "prospect"].includes(this.parent()?.status);
-    },
-  },
-  salutation: {
-    type: String,
-    required: function () {
-        return ["suspect", "prospect"].includes(this.parent()?.status);
-    },
-  },
-  mobileNo: {
-    type: Number,
-    required: function () {
-        return ["suspect", "prospect"].includes(this.parent()?.status);
-    },
-  },
-  emailId: {
-    type: String,
-    required: function () {
-        return ["suspect", "prospect"].includes(this.parent()?.status);
-    },
-  },
-  name: {
-    type: String,
-    required: function () {
-        return ["suspect", "prospect"].includes(this.parent()?.status);
-    },
-  },
+  groupName :String,
+  gender:String,
+  salutation:String,
+  mobileNo:Number,
+  emailId:String,
+  name :String,
+  // groupName: {
+  //   type: String,
+  //   required: function () {
+  //       return ["suspect", "prospect"].includes(this.parent()?.status);
+  //   },
+  // },
+  // gender: {
+  //   type: String,
+  //   required: function () {
+  //       return ["suspect", "prospect"].includes(this.parent()?.status);
+  //   },
+  // },
+  // salutation: {
+  //   type: String,
+  //   required: function () {
+  //       return ["suspect", "prospect"].includes(this.parent()?.status);
+  //   },
+  // },
+  // mobileNo: {
+  //   type: Number,
+  //   required: function () {
+  //       return ["suspect", "prospect"].includes(this.parent()?.status);
+  //   },
+  // },
+  // emailId: {
+  //   type: String,
+  //   required: function () {
+  //       return ["suspect", "prospect"].includes(this.parent()?.status);
+  //   },
+  // },
+  // name: {
+  //   type: String,
+  //   required: function () {
+  //       return ["suspect", "prospect"].includes(this.parent()?.status);
+  //   },
+  // },
   organisation: String,
   designation: String,
   annualIncome: String,

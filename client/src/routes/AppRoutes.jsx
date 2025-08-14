@@ -16,16 +16,15 @@ import LeadType from "../Components/Masters/Leads/LeadType";
 import OccupationType from "../Components/Masters/Leads/OccupationType";
 
 // Customer Components
-import CustomerDetail from "../Components/Customer/CustomerDetail";
+import CustomerDetail from "../Components/Customer/Client/CustomerDetail";
 import ProspectDetail from "../Components/Customer/Prospect/ProspectDetail";
 import SuspectDetail from "../Components/Customer/Suspect/SuspectDetail";
-// import AddClient from "../Components/Customer/Client/AddClient";
 import ClientFirstFrom from "../Components/Customer/Client/ClientFirstFrom";
-import AddProspect from "../Components/Customer/Prospect/AddProspect";
-import AddSuspect from "../Components/Customer/Suspect/AddSuspect";
+import ProspectFirstForm from "../Components/Customer/Prospect/ProspectFirstForm";
+import SuspectFirstForm from "../Components/Customer/Suspect/SuspectFirstForm";
 import ClientLeadTabs from "../Components/Customer/Client/ClientLeadTabs";
-import ProspectLeadTabs from "../Components/Customer/ProspectLeadTabs";
-import SuspectLeadsTable from "../Components/Customer/SuspectLeadsTable";
+import SuspectLeadsTabs from "../Components/Customer/Suspect/SuspectLeadTabs";
+import ProspectLeadTabs from "../Components/Customer/Prospect/ProspectLeadTabs";
 import ImportLead from "../Components/Customer/ImportLead";
 import KYCtabs from "../Components/Customer/KYC/KYCtabs";
 
@@ -69,15 +68,20 @@ const AppRoutes = () => {
         <Route path="/client/edit/:id" element={<ClientFirstFrom/>} />
         <Route path="/client/detail/:id" element={<CustomerDetail />} />
 
-        <Route path="/prospect" element={<ProspectLeadTabs />} />
-        <Route path="/prospect/add" element={<AddProspect />} />
-        <Route path="/prospect/edit/:id" element={<AddProspect />} />
-        <Route path="/prospect/:id" element={<ProspectDetail />} />
 
-        <Route path="/suspect" element={<SuspectLeadsTable />} />
-        <Route path="/suspect/add" element={<AddSuspect />} />
-        <Route path="/suspect/edit/:id" element={<AddSuspect />} />
-        <Route path="/suspect/:id" element={<SuspectDetail />} />
+        {/* // suspect routes  */}
+        <Route path="/suspect" element={<SuspectLeadsTabs/>} />
+        <Route path="/suspect/add" element={<SuspectFirstForm/>} />
+        <Route path="/suspect/edit/:id" element={<SuspectFirstForm/>} />
+        <Route path="/suspect/detail/:id" element={<SuspectDetail />} />
+
+
+        <Route path="/prospect" element={<ProspectLeadTabs/>} />
+        <Route path="/prospect/add" element={<ProspectFirstForm/>} />
+        <Route path="/prospect/edit/:id" element={<ProspectFirstForm/>} />
+        <Route path="/prospect/detail/:id" element={<ProspectDetail />} />
+         
+        
 
         <Route path="/import-lead" element={<ImportLead />} />
         <Route path="/kyc" element={<KYCtabs />} />

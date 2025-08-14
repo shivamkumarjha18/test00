@@ -3,7 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { Modal, Button, Table } from "react-bootstrap";
 import { Row, Col } from 'react-bootstrap';
 import { useRef } from 'react';
-import KycComponent from "./Client/KYCComponent"
+import KycComponent from "./KYCComponent"
 
 
 
@@ -28,8 +28,8 @@ import {
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {getClientById } from "../../redux/feature/ClientRedux/ClientThunx";
-import TasksTab from "./TaskTab";
+import {getClientById } from "../../../redux/feature/ClientRedux/ClientThunx";
+import TasksTab from "../TaskTab";
 
 const CustomerDetail = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -226,9 +226,9 @@ const CustomerDetail = () => {
             <h1>Customer Profile</h1>
             <div className="status-badge">
               <span
-                className={`status-dot ${userData?.status}`}
+                className={`status-dot ${userData?.status || "N/A"}`}
               ></span>
-              {userData?.status}
+              {userData?.status || "N/A"}
             </div>
           </div>
 
@@ -238,12 +238,12 @@ const CustomerDetail = () => {
              
 
               <div className="profile-info">
-                <h2 className="profile-name">{userData?.personalDetails?.name}</h2>
+                <h2 className="profile-name">{userData?.personalDetails?.name || "N/A"}</h2>
                 <div className="profile-meta">
                   <span className="badge text-bg-danger">
-                    {userData?.client?.personalDetails?.groupCode}
+                    {userData?.client?.personalDetails?.groupCode || "N/A"}
                   </span>
-                  <span className="badge secondary">{userData.grade}</span>
+                  <span className="badge secondary">{userData.grade || "N/A"}</span>
                 </div>
                 <div className="detail-item">
                   <FiPhone className="detail-icon" />
@@ -263,7 +263,7 @@ const CustomerDetail = () => {
                     <div>
                       <p className="detail-label">Occupation</p>
                       <p className="detail-value ">
-                        {userData?.personalDetails?.organisation}
+                        {userData?.personalDetails?.organisation || "N/A"}
                       </p>
                     </div>
                     {console.log("occupation", userData)}
@@ -273,7 +273,7 @@ const CustomerDetail = () => {
                     <div>
                       <p className="detail-label">Phone</p>
                       <p className="detail-value">
-                        {userData?.personalDetails?.mobileNo}
+                        {userData?.personalDetails?.mobileNo || "N/A"}
                       </p>
                     </div>
                   </div>
@@ -282,7 +282,7 @@ const CustomerDetail = () => {
                     <div>
                       <p className="detail-label">Email</p>
                       <p className="detail-value">
-                        {userData?.personalDetails?.emailId}
+                        {userData?.personalDetails?.emailId || "N/A"}
                       </p>
                     </div>
                   </div>
@@ -291,7 +291,7 @@ const CustomerDetail = () => {
                     <div>
                       <p className="detail-label">Status</p>
                       <p className="detail-value">
-                        {userData?.status}
+                        {userData?.status || "N/A"}
                       </p>
                     </div>
                   </div>
@@ -418,7 +418,7 @@ const CustomerDetail = () => {
                     <h3>Member Since</h3>
                     {/* <p>{userData.createdAt}</p>
                      */}
-                    <p>{formatDate(userData.createdAt)}</p>
+                    <p>{formatDate(userData.createdAt || "N/A")}</p>
                   </div>
                 </div>
                 <div className="info-card">
@@ -437,7 +437,7 @@ const CustomerDetail = () => {
                   </div>
                   <div>
                     <h3>Referred By</h3>
-                    <p>{userData?.personalDetails?.leadPerson}</p>
+                    <p>{userData?.personalDetails?.leadPerson || "N/A"}</p>
                   </div>
                 </div>
               </div>
@@ -524,7 +524,7 @@ const CustomerDetail = () => {
                                         Group Code:
                                       </span>
                                       <span className="fw-semibold">
-                                        {userData?.personalDetails?.groupCode}
+                                        {userData?.personalDetails?.groupCode || "N/A"}
                                       </span>
                                     </div>
                                   </div>
@@ -536,7 +536,7 @@ const CustomerDetail = () => {
                                         Group Head:
                                       </span>
                                       <span className="fw-semibold">
-                                        {userData?.personalDetails?.familyHead}
+                                        {userData?.personalDetails?.familyHead || "N/A"}
                                       </span>
                                     </div>
                                   </div>
@@ -550,7 +550,7 @@ const CustomerDetail = () => {
                                         WhatsApp:
                                       </span>
                                       <span className="fw-semibold">
-                                        {userData?.personalDetails?.whatsappNo}
+                                        {userData?.personalDetails?.whatsappNo || "N/A"}
                                       </span>
                                     </div>
                                   </div>
@@ -562,7 +562,7 @@ const CustomerDetail = () => {
                                         PA Name:
                                       </span>
                                       <span className="fw-semibold">
-                                        {userData?.personalDetails?.paName}
+                                        {userData?.personalDetails?.paName || "N/A"}
                                       </span>
                                     </div>
                                   </div>
@@ -576,7 +576,7 @@ const CustomerDetail = () => {
                                       <span className="fw-semibold text-break">
                                         {
                                           userData?.personalDetails
-                                            ?.preferredMeetingArea
+                                            ?.preferredMeetingArea || "N/A"
                                         }
                                       </span>
                                     </div>
@@ -592,7 +592,7 @@ const CustomerDetail = () => {
                                         PA Mobile:
                                       </span>
                                       <span className="fw-semibold">
-                                        {userData?.personalDetails?.paMobileNo}
+                                        {userData?.personalDetails?.paMobileNo || "N/A"}
                                       </span>
                                     </div>
                                   </div>
@@ -608,7 +608,7 @@ const CustomerDetail = () => {
                                       <span className="fw-semibold">
                                         {
                                           userData?.personalDetails
-                                            ?.preferredMeetingAddr
+                                            ?.preferredMeetingAddr || "N/A"
                                         }
                                       </span>
                                     </div>
@@ -621,7 +621,7 @@ const CustomerDetail = () => {
                                         Best Time:
                                       </span>
                                       <span className="fw-semibold">
-                                        {userData?.personalDetails?.bestTime}
+                                        {userData?.personalDetails?.bestTime || "N/A"}
                                       </span>
                                     </div>
                                   </div>
@@ -650,7 +650,7 @@ const CustomerDetail = () => {
                                       <span className="fw-semibold">
                                         {
                                           userData?.personalDetails
-                                            ?.callingPurpose
+                                            ?.callingPurpose || "N/A"
                                         }
                                       </span>
                                     </div>
@@ -664,7 +664,7 @@ const CustomerDetail = () => {
                                         Select Name:
                                       </span>
                                       <span className="fw-semibold">
-                                        {userData?.personalDetails?.name}
+                                        {userData?.personalDetails?.name || "N/A"}
                                       </span>
                                     </div>
                                   </div>
@@ -679,7 +679,7 @@ const CustomerDetail = () => {
                                       <span className="fw-semibold">
                                         {
                                           userData?.personalDetails
-                                            ?.allocatedCRE
+                                            ?.allocatedCRE || "N/A"
                                         }
                                       </span>
                                     </div>
@@ -719,7 +719,7 @@ const CustomerDetail = () => {
                                 </h3>
 
                                 <p>
-                                  <strong>Relation:</strong> {member?.relation}
+                                  <strong>Relation:</strong> {member?.relation || "N/A"}
                                 </p>
 
                                 <p>
@@ -922,7 +922,7 @@ const CustomerDetail = () => {
                       <div className="col-12">
                         <div className="p-3 bg-light rounded-3">
                           <small className="text-muted fw-medium">Created On</small>
-                          <div className="fw-bold text-dark">{formatDate(plan?.createdDate)}</div>
+                          <div className="fw-bold text-dark">{formatDate(plan?.createdDate || "N/A")}</div>
                         </div>
                       </div>
                       

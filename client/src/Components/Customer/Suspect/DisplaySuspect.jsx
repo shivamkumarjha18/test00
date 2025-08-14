@@ -5,31 +5,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Spinner } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { toast } from "react-toastify";
-import { deleteClientById, getAllClients, updateCleintStatus } from "../../../redux/feature/ClientRedux/ClientThunx";
+import { deleteSuspectById, getAllSuspects, updateSuspectStatus} from "../../../redux/feature/SuspectRedux/SuspectThunx";
 import { useNavigate } from "react-router-dom";
 
-function DisplayClient() {
+function DisplaySuspect() {
   const dispatch = useDispatch();
-  const { clients = [], loading, error } = useSelector((state) => state.client);
+  const { suspects = [], loading, error } = useSelector((state) => state.suspect);
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    dispatch(getAllClients());
+    dispatch(getAllSuspects());
   }, [dispatch]);
 
   useEffect(() => {
-    const sortedClients = [...(clients || [])].sort(
+    const sortedSuspects = [...(suspects || [])].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
 
-    const mappedData = sortedClients.map((client) => {
-      const personal = client.personalDetails || {};
-      const contact = client.contactInfo || {};
+    const mappedData = sortedSuspects.map((suspect) => {
+      const personal = suspect.personalDetails || {};
+      const contact = suspect.contactInfo || {};
 
       return {
-        id: client._id,
+        id: suspect._id,
         groupCode: personal.groupCode || "-",
         paName: contact.paName || "-",
         name: `${personal.salutation || ""} ${
@@ -40,7 +40,7 @@ function DisplayClient() {
         meetingArea: personal.preferredMeetingArea || "",
         meetinAdd: personal.preferredMeetingAddr || "",
         city: personal.city || "-",
-        createdAt: client.createdAt || new Date().toISOString(),
+        createdAt: suspect.createdAt || new Date().toISOString(),
       };
     });
 
@@ -59,37 +59,37 @@ function DisplayClient() {
     } else {
       setFilteredData(mappedData);
     }
-  }, [clients, searchText]);
+  }, [suspects, searchText]);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this client?")) {
+    if (window.confirm("Are you sure you want to delete this suspect?")) {
       try {
-        await dispatch(deleteClientById(id)).unwrap();
-        toast.success("Client deleted successfully");
-        dispatch(getAllClients());
+        await dispatch(deleteSuspectById(id)).unwrap();
+        toast.success("Suspect deleted successfully");
+        dispatch(getAllSuspects());
       } catch (err) {
-        toast.error(err || "Failed to delete client");
+        toast.error(err || "Failed to delete suspect");
       }
     }
   };
 
-  const handleEdit = (client) => {
-    navigate(`/client/edit/${client.id}`);
+  const handleEdit = (suspect) => {
+    navigate(`/suspect/edit/${suspect.id}`);
   };
 
   const handleView = (id) => {
-    navigate(`/client/detail/${id}`);
+    navigate(`/suspect/detail/${id}`);
   };
 
   const handleConvertStatus = (id, status) => {
-    dispatch(updateCleintStatus({ id, status }))
+    dispatch(updateSuspectStatus({ id, status }))
       .unwrap()
       .then(() => {
-        toast.success("Client status updated successfully");
-        dispatch(getAllClients());
+        toast.success("Suspect status updated successfully");
+        dispatch(getAllSuspects());
       })
       .catch((err) => {
-        toast.error(err || "Failed to update client status");
+        toast.error(err || "Failed to update suspect status");
       });
   };
 
@@ -145,10 +145,10 @@ function DisplayClient() {
         <Button
           variant="primary"
           size="sm"
-          onClick={() => handleConvertStatus(row.id, "prospect")}
+          onClick={() => handleConvertStatus(row.id, "client")}
           className="text-nowrap"
         >
-          To Prospect
+          To Client
         </Button>
       ),
       ignoreRowClick: true,
@@ -167,7 +167,7 @@ function DisplayClient() {
 
   return (
     <div className="w-100 p-2 mt-4">
-      <h3>Client List</h3>
+      <h3>Suspect List</h3>
       <div className="card shadow-sm">
         <DataTable
           columns={columns}
@@ -228,7 +228,7 @@ function DisplayClient() {
   );
 }
 
-export default DisplayClient;
+export default DisplaySuspect;
 
 
 

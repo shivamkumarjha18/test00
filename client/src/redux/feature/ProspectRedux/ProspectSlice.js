@@ -1,119 +1,226 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as thunks from "./ProspectThunx";
+
+import {
+  createProspect,
+  addFamilyMember,
+  addFinancialInfo,
+  addFuturePrioritiesAndNeeds,
+  addProposedFinancialPlan,
+  getAllProspects,
+  getProspectById,
+  updateProspectStatus,
+  updateProspectPersonalDetails,
+  deleteProspectById,
+  getAllFamilyMembers
+} from "./ProspectThunx";
+
 
 const initialState = {
   prospects: [],
   currentProspect: null,
   loading: false,
+  success: false,
   error: null,
+  prospectData: null,
+  familyMembers: null,
+  financialInfo: null,
+  futurePriorities: null,
+  proposedPlan: null,
+  prospects: [],
+  singleProspect: null,
+  familyMembers : [],
 };
 
+
+
 const prospectSlice = createSlice({
-  name: "prospect",
+  name: 'prospect',
   initialState,
   reducers: {
-    clearCurrentProspect: (state) => {
-      state.currentProspect = null;
+    resetProspectState: (state) => {
+      Object.assign(state, initialState);
     },
   },
   extraReducers: (builder) => {
     builder
-      // Create Prospect
-      .addCase(thunks.createProspect.pending, (state) => {
+      // createProspect
+      .addCase(createProspect.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(thunks.createProspect.fulfilled, (state, action) => {
+      .addCase(createProspect.fulfilled, (state, action) => {
         state.loading = false;
-        state.prospects.push(action.payload);
-        state.currentProspect = action.payload;
+        state.success = true;
+        state.prospectData = action.payload;
       })
-      .addCase(thunks.createProspect.rejected, (state, action) => {
+      .addCase(createProspect.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Get All Prospects
-      .addCase(thunks.getAllProspects.pending, (state) => {
+
+      // addFamilyMember
+      .addCase(addFamilyMember.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(thunks.getAllProspects.fulfilled, (state, action) => {
+      .addCase(addFamilyMember.fulfilled, (state, action) => {
         state.loading = false;
+        state.success = true;
+        state.familyMembers = action.payload;
+      })
+      .addCase(addFamilyMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // addFinancialInfo
+      .addCase(addFinancialInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(addFinancialInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.financialInfo = action.payload;
+      })
+      .addCase(addFinancialInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // addFuturePrioritiesAndNeeds
+      .addCase(addFuturePrioritiesAndNeeds.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(addFuturePrioritiesAndNeeds.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.futurePriorities = action.payload;
+      })
+      .addCase(addFuturePrioritiesAndNeeds.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // addProposedFinancialPlan
+      .addCase(addProposedFinancialPlan.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(addProposedFinancialPlan.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.proposedPlan = action.payload;
+      })
+      .addCase(addProposedFinancialPlan.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // getAllProspects
+      .addCase(getAllProspects.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getAllProspects.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
         state.prospects = action.payload;
       })
-      .addCase(thunks.getAllProspects.rejected, (state, action) => {
+      .addCase(getAllProspects.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Get Prospect By Id
-      .addCase(thunks.getProspectById.pending, (state) => {
+
+      // getClientById
+      .addCase(getProspectById.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(thunks.getProspectById.fulfilled, (state, action) => {
+      .addCase(getProspectById.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentProspect = action.payload;
+        state.success = true;
+        state.singleProspect = action.payload;
       })
-      .addCase(thunks.getProspectById.rejected, (state, action) => {
+      .addCase(getProspectById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleProspect = null;
+      })
+
+      // updateProspectStatus
+      .addCase(updateProspectStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateProspectStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.singleProspect = action.payload;
+      })
+      .addCase(updateProspectStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleProspect = null;
+      })
+      .addCase(updateProspectPersonalDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateProspectPersonalDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.singleProspect = action.payload;
+      })
+      .addCase(updateProspectPersonalDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleProspect = null;
+      })
+      // delete prospect
+      .addCase(deleteProspectById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(deleteProspectById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        const deletedId = action.payload.id || action.payload._id;
+        state.prospects = state.prospects.filter(prospect => prospect._id !== deletedId);
+      })
+    
+      .addCase(deleteProspectById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+
+      })
+      .addCase(getAllFamilyMembers.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getAllFamilyMembers.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.success = true;
+        state.familyMembers = action.payload
+      })
+      .addCase(getAllFamilyMembers.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload;
       })
-      // Update Prospect (example for personal details)
-      .addCase(thunks.updateProspectPersonalDetails.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentProspect = action.payload.updatedProspect;
-        const index = state.prospects.findIndex(p => p._id === action.payload.updatedProspect._id);
-        if (index !== -1) {
-          state.prospects[index] = action.payload.updatedProspect;
-        }
-      })
-      // Delete Prospect
-      .addCase(thunks.deleteProspect.fulfilled, (state, action) => {
-        state.loading = false;
-        state.prospects = state.prospects.filter(p => p._id !== action.payload);
-      })
-      // Add family members
-      .addCase(thunks.addFamilyMemberToProspect.fulfilled, (state, action) => {
-          state.loading = false;
-          if (state.currentProspect) {
-              state.currentProspect.familyMembers = action.payload.familyMembers;
-          }
-      })
-      // Add financial info
-      .addCase(thunks.addFinancialInfoToProspect.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.currentProspect) {
-            state.currentProspect.financialInfo = action.payload.financialInfo;
-        }
-      })
-      // Add future priorities
-      .addCase(thunks.addFuturePrioritiesToProspect.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.currentProspect) {
-            state.currentProspect.futurePriorities = action.payload.prospect.futurePriorities;
-            state.currentProspect.needs = action.payload.prospect.needs;
-        }
-      })
-      // Add proposed plan
-      .addCase(thunks.addProposedPlanToProspect.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.currentProspect) {
-            state.currentProspect.proposedPlan = action.payload.proposedPlan;
-        }
-      })
-      .addMatcher(
-        (action) => action.type.endsWith('/pending'),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith('/rejected'),
-        (state, action) => {
-          state.loading = false;
-          state.error = action.payload;
-        }
-      );
   },
 });
 
-export const { clearCurrentProspect } = prospectSlice.actions;
+export const { resetProspectState } = prospectSlice.actions;
 export default prospectSlice.reducer;

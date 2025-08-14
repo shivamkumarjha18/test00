@@ -32,7 +32,6 @@ const AddClient = ({ editId, setActiveTab }) => {
             onDataChange={handleDataChange}
             initialData={formData}
             isEditMode={isEditMode}
-            // onDataChange={handlePersonalDetailsSubmit}
           />
         );
       case "familyMembers":

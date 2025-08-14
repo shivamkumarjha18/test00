@@ -1,119 +1,226 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as thunks from "./SuspectThunx";
+
+import {
+  createSuspect,
+  addFamilyMember,
+  addFinancialInfo,
+  addFuturePrioritiesAndNeeds,
+  addProposedFinancialPlan,
+  getAllSuspects,
+  getSuspectById,
+  updateSuspectStatus,
+  updateSuspectPersonalDetails,
+  deleteSuspectById,
+  getAllFamilyMembers
+} from "./SuspectThunx";
+
 
 const initialState = {
   suspects: [],
   currentSuspect: null,
   loading: false,
+  success: false,
   error: null,
+  suspectData: null,
+  familyMembers: null,
+  financialInfo: null,
+  futurePriorities: null,
+  proposedPlan: null,
+  suspects: [],
+  singleSuspect: null,
+  familyMembers : [],
 };
 
+
+
 const suspectSlice = createSlice({
-  name: "suspect",
+  name: 'suspect',
   initialState,
   reducers: {
-    clearCurrentSuspect: (state) => {
-      state.currentSuspect = null;
+    resetSuspectState: (state) => {
+      Object.assign(state, initialState);
     },
   },
   extraReducers: (builder) => {
     builder
-      // Create Suspect
-      .addCase(thunks.createSuspect.pending, (state) => {
+      // createSuspect
+      .addCase(createSuspect.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(thunks.createSuspect.fulfilled, (state, action) => {
+      .addCase(createSuspect.fulfilled, (state, action) => {
         state.loading = false;
-        state.suspects.push(action.payload);
-        state.currentSuspect = action.payload;
+        state.success = true;
+        state.prospectData = action.payload;
       })
-      .addCase(thunks.createSuspect.rejected, (state, action) => {
+      .addCase(createSuspect.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Get All Suspects
-      .addCase(thunks.getAllSuspects.pending, (state) => {
+      
+      // addFamilyMember
+      .addCase(addFamilyMember.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(thunks.getAllSuspects.fulfilled, (state, action) => {
+      .addCase(addFamilyMember.fulfilled, (state, action) => {
         state.loading = false;
+        state.success = true;
+        state.familyMembers = action.payload;
+      })
+      .addCase(addFamilyMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // addFinancialInfo
+      .addCase(addFinancialInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(addFinancialInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.financialInfo = action.payload;
+      })
+      .addCase(addFinancialInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // addFuturePrioritiesAndNeeds
+      .addCase(addFuturePrioritiesAndNeeds.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(addFuturePrioritiesAndNeeds.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.futurePriorities = action.payload;
+      })
+      .addCase(addFuturePrioritiesAndNeeds.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // addProposedFinancialPlan
+      .addCase(addProposedFinancialPlan.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(addProposedFinancialPlan.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.proposedPlan = action.payload;
+      })
+      .addCase(addProposedFinancialPlan.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // getAllSuspects
+      .addCase(getAllSuspects.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getAllSuspects.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
         state.suspects = action.payload;
       })
-      .addCase(thunks.getAllSuspects.rejected, (state, action) => {
+      .addCase(getAllSuspects.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Get Suspect By Id
-      .addCase(thunks.getSuspectById.pending, (state) => {
+
+      // getSuspectById
+      .addCase(getSuspectById.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
-      .addCase(thunks.getSuspectById.fulfilled, (state, action) => {
+      .addCase(getSuspectById.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentSuspect = action.payload;
+        state.success = true;
+        state.singleSuspect = action.payload;
       })
-      .addCase(thunks.getSuspectById.rejected, (state, action) => {
+      .addCase(getSuspectById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleSuspect = null;
+      })
+
+      // updateSuspectStatus
+      .addCase(updateSuspectStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateSuspectStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.singleSuspect = action.payload;
+      })
+      .addCase(updateSuspectStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleSuspect = null;
+      })
+      .addCase(updateSuspectPersonalDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateSuspectPersonalDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.singleSuspect = action.payload;
+      })
+      .addCase(updateSuspectPersonalDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleSuspect = null;
+      })
+      // delete suspect
+      .addCase(deleteSuspectById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(deleteSuspectById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        const deletedId = action.payload.id || action.payload._id;
+        state.suspects = state.suspects.filter(suspect => suspect._id !== deletedId);
+      })
+    
+      .addCase(deleteSuspectById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+
+      })
+      .addCase(getAllFamilyMembers.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getAllFamilyMembers.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.success = true;
+        state.familyMembers = action.payload
+      })
+      .addCase(getAllFamilyMembers.rejected, (state, action)=>{
         state.loading = false;
         state.error = action.payload;
       })
-      // Update Suspect (example for personal details)
-      .addCase(thunks.updateSuspectPersonalDetails.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentSuspect = action.payload.updatedSuspect;
-        const index = state.suspects.findIndex(s => s._id === action.payload.updatedSuspect._id);
-        if (index !== -1) {
-          state.suspects[index] = action.payload.updatedSuspect;
-        }
-      })
-      // Delete Suspect
-      .addCase(thunks.deleteSuspect.fulfilled, (state, action) => {
-        state.loading = false;
-        state.suspects = state.suspects.filter(s => s._id !== action.payload);
-      })
-      // Add family members
-      .addCase(thunks.addFamilyMemberToSuspect.fulfilled, (state, action) => {
-          state.loading = false;
-          if (state.currentSuspect) {
-              state.currentSuspect.familyMembers = action.payload.familyMembers;
-          }
-      })
-      // Add financial info
-      .addCase(thunks.addFinancialInfoToSuspect.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.currentSuspect) {
-            state.currentSuspect.financialInfo = action.payload.financialInfo;
-        }
-      })
-      // Add future priorities
-      .addCase(thunks.addFuturePrioritiesToSuspect.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.currentSuspect) {
-            state.currentSuspect.futurePriorities = action.payload.suspect.futurePriorities;
-            state.currentSuspect.needs = action.payload.suspect.needs;
-        }
-      })
-      // Add proposed plan
-      .addCase(thunks.addProposedPlanToSuspect.fulfilled, (state, action) => {
-        state.loading = false;
-        if (state.currentSuspect) {
-            state.currentSuspect.proposedPlan = action.payload.proposedPlan;
-        }
-      })
-      .addMatcher(
-        (action) => action.type.endsWith('/pending'),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith('/rejected'),
-        (state, action) => {
-          state.loading = false;
-          state.error = action.payload;
-        }
-      );
   },
 });
 
-export const { clearCurrentSuspect } = suspectSlice.actions;
+export const { resetSuspectState } = suspectSlice.actions;
 export default suspectSlice.reducer;

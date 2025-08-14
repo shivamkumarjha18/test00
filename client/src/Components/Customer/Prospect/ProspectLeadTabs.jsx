@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import AddSuspect from "./AddSuspect";
-import SuspectLeadsTable from "./SuspectLeadsTable";
+import DisplayProspect from "./DisplayProspect";
 
-const SuspectLeadTabs = () => {
+import ProspectForm  from "./ProspectFirstForm"
+
+const ProspectLeadTabs = () => {
   const [activeTab, setActiveTab] = useState("add");
-  const [editId, setEditId] = useState(null); // 👈 Track which lead is being edited
-
+  const [editId, setEditId] = useState(""); // 👈 Track which lead is being edited
+  console.log(editId, "id prospect tab");
   return (
-    <div className="container mt-4">
+    <div className=" p-4 mt-4">
       {/* Tab Buttons */}
       <div className="d-flex mb-3">
         <button
@@ -19,7 +20,7 @@ const SuspectLeadTabs = () => {
             setActiveTab("add");
           }}
         >
-          Add Suspect Lead
+          Add Prospect Lead
         </button>
         <button
           className={`btn btn-${
@@ -27,22 +28,19 @@ const SuspectLeadTabs = () => {
           }`}
           onClick={() => setActiveTab("display")}
         >
-          Display Suspect Leads
+           Prospect Leads
         </button>
       </div>
 
       {/* Tab Content */}
-      <div>
-        {activeTab === "add" && <AddSuspect editId={editId} />}
+      <div  >
+        {activeTab === "add" && <ProspectForm editId={editId} />}
         {activeTab === "display" && (
-          <SuspectLeadsTable
-            setActiveTab={setActiveTab}
-            setEditId={setEditId}
-          />
+          <DisplayProspect setActiveTab={setActiveTab} setEditId={setEditId} />
         )}
       </div>
     </div>
   );
 };
 
-export default SuspectLeadTabs;
+export default ProspectLeadTabs
