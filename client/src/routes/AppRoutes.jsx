@@ -51,14 +51,14 @@ const AppRoutes = () => {
         <Route index element={<DashboardCards />} />
 
         {/* Masters */}
-        <Route path="/composite" element={<Composite />} />
         <Route path="/area" element={<Area />} />
+        <Route path="/sub-area" element={<SubArea />} />
         <Route path="/city" element={<City />} />
+        <Route path="/composite" element={<Composite />} />
         <Route path="/lead-type" element={<LeadType />} />
         <Route path="/occupation-type" element={<OccupationType />} />
         <Route path="/lead-occupation" element={<LeadOccupation />} />
         <Route path="/lead-source" element={<LeadSource />} />
-        <Route path="/sub-area" element={<SubArea />} />
         <Route path="/marketing-task" element={<MarketingTask />} />
         <Route path="/servicing-task" element={<ServicingTask />} />
 

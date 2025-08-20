@@ -53,9 +53,11 @@ const SubArea = () => {
       if (editId) {
         // Update existing sub area
         await dispatch(updateSubArea({ id: editId, subAreaData: formData }));
+        await dispatch(fetchSubAreas())
       } else {
         // Create new sub area
         await dispatch(createSubArea(formData));
+        await dispatch(fetchSubAreas())
       }
 
       // Reset form and switch to view tab
@@ -149,7 +151,7 @@ const SubArea = () => {
           <form onSubmit={handleSubmit}>
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label">Select Area*</label>
+                <label className="form-label">Select Area</label>
                 <select
                   className={`form-select ${
                     formErrors.areaId ? "is-invalid" : ""
@@ -172,7 +174,7 @@ const SubArea = () => {
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">Sub Area Name*</label>
+                <label className="form-label">Sub Area Name</label>
                 <input
                   type="text"
                   className={`form-control ${

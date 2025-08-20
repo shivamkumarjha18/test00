@@ -18,7 +18,7 @@ import {
 
 const City = () => {
   const dispatch = useDispatch();
-  const { details, loading } = useSelector((state) => state.leadcity);
+  const { details, loading } = useSelector((state) => state.leadCity);
   const [city, setCity] = useState("");
   const [editId, setEditId] = useState(null);
   const [editValue, setEditValue] = useState("");

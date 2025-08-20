@@ -136,13 +136,13 @@ const Navbarfristn = () => {
                     <div className="col-md-4">
                       <h6 className="text-danger">LOCATION MASTER</h6>
                       <Dropdown.Item as={Link} to="/area">
-                        Area
+                        Add Location
                       </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/sub-area">
-                        Sub Area
+                        Add Sub Location
                       </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/city">
-                        City
+                        Add City
                       </Dropdown.Item>
                     </div>
 
@@ -154,10 +154,6 @@ const Navbarfristn = () => {
                         Lead Type
                       </Dropdown.Item>
 
-                      <Dropdown.Item as={Link} to="/occupation-type">
-                        Occupation Type
-                      </Dropdown.Item>
-
                       <Dropdown.Item as={Link} to="/lead-source">
                         Lead Source
                       </Dropdown.Item>
@@ -165,6 +161,12 @@ const Navbarfristn = () => {
                       <Dropdown.Item as={Link} to="/lead-occupation">
                         Lead Occupation
                       </Dropdown.Item>
+                      
+                      <Dropdown.Item as={Link} to="/occupation-type">
+                        Occupation Type
+                      </Dropdown.Item>
+
+
                     </div>
                   </div>
                 </Dropdown.Menu>

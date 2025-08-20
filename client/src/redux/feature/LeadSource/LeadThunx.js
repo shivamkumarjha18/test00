@@ -6,9 +6,10 @@ const API_URL = "/api/leadSource";
 
 export const fetchDetails = createAsyncThunk("/leadSource/fetch", async () => {
   const response = await axios.get(API_URL);
-  // console.log(response.data, "SOURCE");
+  console.log(response.data, "SOURCES");
   return response.data;
 });
+
 
 export const fetchDetailsById = createAsyncThunk(
   "/leadSource/fetchDetailsById",
