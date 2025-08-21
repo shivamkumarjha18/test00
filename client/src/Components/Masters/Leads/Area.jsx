@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PencilFill, TrashFill } from "react-bootstrap-icons";
+import {toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   fetchAreas,
   createArea,
@@ -31,7 +33,6 @@ const Area = () => {
     if (success) {
       setFormData({ name: "", code: "", pin: "" });
       setEditId(null);
-      // dispatch(resetAreaStatus());
     }
   }, [success, dispatch]);
 
@@ -43,14 +44,29 @@ const Area = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (!formData.name || !formData.code || !formData.pin) return;
 
     if (editId) {
-      dispatch(updateArea({ id: editId, areaData: formData }));
+      const result = await dispatch(updateArea({ id: editId, areaData: formData }));
+      if (result.meta.requestStatus === "fulfilled") {
+        setFormData({ name: "", code: "", pin: "" });
+        setEditId(null);
+        toast.success("Area updated successfully!");
+      } else {
+        toast.error("Failed to update area. Please try again.");
+      }
     } else {
-      dispatch(createArea(formData));
+      const result = await dispatch(createArea(formData));
+      if (result.meta.requestStatus === "fulfilled") {
+        setFormData({ name: "", code: "", pin: "" });
+        setEditId(null);
+        toast.success("Area added successfully!");
+      } else {
+        toast.error("Failed to add area. Please try again.");
+      }
+
     }
   };
 
@@ -63,11 +79,20 @@ const Area = () => {
     setEditId(area._id);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this area?")) {
-      dispatch(deleteArea(id));
+
+ 
+  const handleDelete = async (id) => {
+  if (window.confirm("Are you sure you want to delete this area?")) {
+    const result = await dispatch(deleteArea(id));
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success("Area deleted successfully!");
+    } else {
+      toast.error("Failed to delete area. Please try again.");
     }
-  };
+  }
+};
+
+  
 
   if (loading && !areas.length) {
     return <div className="text-center mt-4">Loading areas...</div>;
@@ -80,12 +105,6 @@ const Area = () => {
   return (
     <div className="container mt-2">
       <h3 className="mb-3">Location</h3>
-
-      {success && (
-        <div className="alert alert-success">
-          Operation completed successfully!
-        </div>
-      )}
 
       <div className="row">
         {/* Form Section */}

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import DisplayClient from "./DisplayClient";
-// import AddClient from "./AddClient";
 import ClientForm  from "./ClientFirstFrom"
 
 const ClientLeadTabs = () => {

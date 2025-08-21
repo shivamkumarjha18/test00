@@ -8,6 +8,9 @@ import {
 } from "../../../redux/feature/LeadSubArea/SubAreaThunx";
 import { fetchAreas } from "../../../redux/feature/LeadArea/AreaThunx";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const SubArea = () => {
   const dispatch = useDispatch();
@@ -52,11 +55,33 @@ const SubArea = () => {
     try {
       if (editId) {
         // Update existing sub area
-        await dispatch(updateSubArea({ id: editId, subAreaData: formData }));
+       const result = await dispatch(updateSubArea({ id: editId, subAreaData: formData }));
+        if(result.meta.requestStatus === "fulfilled") {
+          setFormData({
+            areaId: "",
+            subAreaName: "",
+            shortcode: "",
+            pincode: "",
+          })
+          toast.success("Sub Area updated successfully!");
+        } else {
+          toast.error("Failed to update Sub Area.");
+        }
         await dispatch(fetchSubAreas())
       } else {
         // Create new sub area
-        await dispatch(createSubArea(formData));
+        const result = await dispatch(createSubArea(formData));
+        if(result.meta.requestStatus === "fulfilled") {
+          setFormData({
+            areaId: "",
+            subAreaName: "",
+            shortcode: "",
+            pincode: "",
+          })
+          toast.success("Sub Area created successfully!");  
+        } else {
+          toast.error("Failed to create Sub Area.");
+        }
         await dispatch(fetchSubAreas())
       }
 
@@ -100,7 +125,14 @@ const SubArea = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this sub area?")) {
       try {
-        await dispatch(deleteSubArea(id));
+        const result = await dispatch(deleteSubArea(id));
+        if(result.meta.requestStatus === "fulfilled") {
+          toast.success("Sub Area deleted successfully!");
+          await dispatch(fetchSubAreas());
+        }
+        else {
+          toast.error("Failed to delete Sub Area.");
+        }
       } catch (err) {
         console.error("Error deleting sub area:", err);
       }
@@ -118,7 +150,7 @@ const SubArea = () => {
 
   return (
     <div className="card shadow-lg rounded">
-      <div style={{backgroundColor:"#ECECEC"}} className="card-header  text-black d-flex justify-content-between align-items-center">
+      <div style={{ backgroundColor: "#ECECEC" }} className="card-header  text-black d-flex justify-content-between align-items-center">
         <h5 className="mb-0">Manage Sub Areas</h5>
         <ul className="nav nav-tabs card-header-tabs">
           <li className="nav-item">
@@ -153,9 +185,8 @@ const SubArea = () => {
               <div className="col-md-6">
                 <label className="form-label">Select Area</label>
                 <select
-                  className={`form-select ${
-                    formErrors.areaId ? "is-invalid" : ""
-                  }`}
+                  className={`form-select ${formErrors.areaId ? "is-invalid" : ""
+                    }`}
                   name="areaId"
                   value={formData.areaId}
                   onChange={handleChange}
@@ -177,9 +208,8 @@ const SubArea = () => {
                 <label className="form-label">Sub Area Name</label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    formErrors.subAreaName ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${formErrors.subAreaName ? "is-invalid" : ""
+                    }`}
                   name="subAreaName"
                   value={formData.subAreaName}
                   onChange={handleChange}

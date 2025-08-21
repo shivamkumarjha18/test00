@@ -1,12 +1,13 @@
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchLeadOccupationDetails,
-  createDetails,
-  updateDetails,
-  deleteDetails,
+  getAllOccupations,
+  createOccupation,
+  updateOccupation,
+  deleteOccupation
 } from "../../../redux/feature/LeadOccupation/OccupationThunx";
-import { fetchOccupations } from "../../../redux/feature/OccupationType/OccupationThunx";
+import { getAllOccupationTypes } from "../../../redux/feature/OccupationType/OccupationThunx";
 import {
   Container,
   Row,
@@ -16,55 +17,101 @@ import {
   Card,
   ListGroup,
 } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LeadOccupation = () => {
-  const [leadOccupation, setLeadOccupation] = useState("");
-  const [occupationName, setoccupationName] = useState("");
-  const [editId, setEditId] = useState(null);
+  // Use a more descriptive state variable for the occupation type ID
+  const [occupationTypeId, setOccupationTypeId] = useState("");
+  const [occupationName, setOccupationName] = useState("");
+  const [editId, setEditId] = useState(null)
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const { details, loading, error } = useSelector(
-    (state) => state.leadOccupation
-  );
-  const occupationType = useSelector((state) => state.OccupationType);
-  console.log(occupationType, "occupation type");
+
+  // Use clear variable names for the state from Redux
+  const { alldetails } = useSelector((state) => state.leadOccupation);
+  const { alldetailsForTypes } = useSelector((state) => state.OccupationType);
+
 
   useEffect(() => {
-    dispatch(fetchLeadOccupationDetails());
-    dispatch(fetchOccupations());
+    dispatch(getAllOccupationTypes());
+    dispatch(getAllOccupations());
   }, [dispatch]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!leadOccupation || !occupationName) return;
+    if (!occupationTypeId || !occupationName) return;
 
-    if (editId) {
-      dispatch(
-        updateDetails({ id: editId, data: { occupationName, leadOccupation } })
-      );
-    } else {
-      dispatch(createDetails({ occupationName, leadOccupation }));
+    setLoading(true);
+
+    try {
+      if (editId) {
+        // Pass the correct state variables to the update thunk
+       const result = await dispatch(updateOccupation({ id: editId, data: { occupationName, occupationType: occupationTypeId } }));
+        if (result.meta.requestStatus === 'fulfilled') {
+          setOccupationName("");
+          setOccupationTypeId("");
+          toast.success("Occupation updated successfully");
+          dispatch(getAllOccupationTypes());
+          dispatch(getAllOccupations());
+        } else{
+          toast.error("Failed to update occupation");
+        }
+      } else {
+        // Pass the correct state variables to the create thunk
+        const result =await dispatch(createOccupation({ occupationName, occupationType: occupationTypeId }));
+        if( result.meta.requestStatus === 'fulfilled') {
+          setOccupationName("");
+          setOccupationTypeId("");
+          dispatch(getAllOccupationTypes());
+          dispatch(getAllOccupations());
+        }
+        toast.success("Occupation added successfully");
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setLoading(false);
     }
 
-    setoccupationName("");
-    setLeadOccupation("");
+    setOccupationName("");
+    setOccupationTypeId("");
     setEditId(null);
   };
 
   const handleEdit = (item) => {
-    setoccupationName(item.occupationName);
-    setLeadOccupation(item.leadOccupation);
+    // Correctly set the state from the populated data
+    setOccupationName(item.occupationName);
+    setOccupationTypeId(item.occupationType?._id);
     setEditId(item._id);
   };
 
-  const handleDelete = (id) => {
+
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this occupation?")) {
-      dispatch(deleteDetails(id));
+      setLoading(true);
+      try {
+        const result = await dispatch(deleteOccupation(id));
+        if (result.meta.requestStatus === 'fulfilled') {
+          setOccupationName("");
+          setOccupationTypeId("");
+          toast.success("Occupation deleted successfully");
+          dispatch(getAllOccupationTypes());
+          dispatch(getAllOccupations());
+
+        } else {
+          toast.error("Failed to delete occupation");
+        }
+
+      } catch (error) {
+        toast.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <Container
@@ -80,29 +127,29 @@ const LeadOccupation = () => {
             <Card.Body>
               <Card.Title>{editId ? "Edit" : "Add"} Lead Occupation</Card.Title>
               <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="leadOccupation">
-                  <Form.Label>Lead Occupation</Form.Label>
+                <Form.Group className="mb-3" controlId="occupationTypeId">
+                  <Form.Label>Lead Occupation Type</Form.Label>
                   <Form.Select
-                    value={leadOccupation}
-                    onChange={(e) => setLeadOccupation(e.target.value)}
+                    value={occupationTypeId}
+                    onChange={(e) => setOccupationTypeId(e.target.value)}
                     required
                   >
                     <option value="">--Choose--</option>
-                    {(occupationType?.details || []).map((item) => (
-                      <option key={item._id} value={item.occupationType}>
+                    {Array.isArray(alldetailsForTypes) && alldetailsForTypes.map((item) => (
+                      <option key={item._id} value={item._id}>
                         {item.occupationType}
                       </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="leadName">
-                  <Form.Label>Lead Name</Form.Label>
+                <Form.Group className="mb-3" controlId="occupationName">
+                  <Form.Label>Occupation Name</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter Name"
                     value={occupationName}
-                    onChange={(e) => setoccupationName(e.target.value)}
+                    onChange={(e) => setOccupationName(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -115,8 +162,8 @@ const LeadOccupation = () => {
                     variant="secondary"
                     className="ms-2"
                     onClick={() => {
-                      setoccupationName("");
-                      setLeadOccupation("");
+                      setOccupationName("");
+                      setOccupationTypeId("");
                       setEditId(null);
                     }}
                   >
@@ -134,14 +181,15 @@ const LeadOccupation = () => {
             <Card.Body>
               <Card.Title>All Lead Occupations</Card.Title>
               <ListGroup variant="flush">
-                {Array.isArray(details) &&
-                  details.map((item) => (
+                {Array.isArray(alldetails) &&
+                  alldetails.map((item) => (
                     <ListGroup.Item
                       key={item._id}
                       className="d-flex justify-content-between align-items-center"
                     >
+                      {/* Display the populated occupationType name */}
                       <div>
-                        {item.occupationName} ({item.leadOccupation})
+                        {item.occupationName}
                       </div>
                       <div>
                         <Button

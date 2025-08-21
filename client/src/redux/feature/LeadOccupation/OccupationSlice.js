@@ -1,123 +1,134 @@
+
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  fetchLeadOccupationDetails,
-  fetchDetailsById,
-  createDetails,
-  updateDetails,
-  deleteDetails,
+  createOccupation,
+  getAllOccupations,
+  getOccupationById,
+  updateOccupation,
+  deleteOccupation
 } from "./OccupationThunx";
 
 const initialState = {
-  details: [],
-  detail: null,
+  alldetails: [],
+  singleDetailForOccupation: null,
   loading: false,
   error: null,
   success: false,
 };
 
-const LeadAreaSlice = createSlice({
+const LeadOccupationSlice = createSlice({
   name: "leadOccupation",
   initialState,
   reducers: {
+    // A reducer to reset the 'success' flag after a successful operation
     resetSuccess: (state) => {
       state.success = false;
+    },
+    // A reducer to clear any errors
+    clearError: (state) => {
       state.error = null;
+    },
+    // A reducer to clear the single item 'detail'
+    clearDetail: (state) => {
+      state.detail = null;
     },
   },
 
- 
   extraReducers: (builder) => {
     builder
-      // First handle all specific cases with addCase
-      .addCase(fetchLeadOccupationDetails.pending, (state) => {
+      // =========================== Fetch All Occupations ===========================
+      .addCase(getAllOccupations.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchLeadOccupationDetails.fulfilled, (state, action) => {
+      .addCase(getAllOccupations.fulfilled, (state, action) => {
         state.loading = false;
-        state.details = action.payload;
+        state.alldetails = action.payload; // Correctly sets the array
+        state.error = null;
       })
-      .addCase(fetchLeadOccupationDetails.rejected, (state, action) => {
+      .addCase(getAllOccupations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.alldetails = []; // Reset to empty array on failure
       })
 
-      .addCase(fetchDetailsById.pending, (state) => {
+      // =========================== Fetch Single Occupation by ID ===================
+      .addCase(getOccupationById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchDetailsById.fulfilled, (state, action) => {
+      .addCase(getOccupationById.fulfilled, (state, action) => {
         state.loading = false;
-        state.detail = action.payload;
+        state. singleDetailForOccupation = action.payload; // Correctly sets the single item
+        state.error = null;
       })
-      .addCase(fetchDetailsById.rejected, (state, action) => {
+      .addCase(getOccupationById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.detail = null; // Reset to null on failure
       })
 
-      .addCase(createDetails.pending, (state) => {
+      // =========================== Create New Occupation ===========================
+      .addCase(createOccupation.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = false;
       })
-      .addCase(createDetails.fulfilled, (state, action) => {
+      .addCase(createOccupation.fulfilled, (state, action) => {
         state.loading = false;
-        state.details.unshift(action.payload);
+        state.alldetails.unshift(action.payload);
         state.success = true;
-      })
-      .addCase(createDetails.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      .addCase(updateDetails.pending, (state) => {
-        state.loading = true;
         state.error = null;
       })
-      .addCase(updateDetails.fulfilled, (state, action) => {
+      .addCase(createOccupation.rejected, (state, action) => {
         state.loading = false;
-        const index = state.details.findIndex(
+        state.error = action.payload;
+        state.success = false;
+      })
+
+      // =========================== Update Occupation ===============================
+      .addCase(updateOccupation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateOccupation.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.alldetails.findIndex(
           (d) => d._id === action.payload._id
         );
-        if (index !== -1) state.details[index] = action.payload;
+        if (index !== -1) {
+          state.alldetails[index] = action.payload;
+        }
         state.success = true;
-      })
-      .addCase(updateDetails.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      .addCase(deleteDetails.pending, (state) => {
-        state.loading = true;
         state.error = null;
       })
-      .addCase(deleteDetails.fulfilled, (state, action) => {
-        state.loading = false;
-        state.details = state.details.filter((d) => d._id !== action.payload);
-        state.success = true;
-      })
-      .addCase(deleteDetails.rejected, (state, action) => {
+      .addCase(updateOccupation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.success = false;
       })
 
-      // If you still want to use addMatcher for common patterns,
-      // it must come after all addCase calls
-      .addMatcher(
-        (action) => action.type.endsWith("/pending"),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
-        (state, action) => {
-          state.loading = false;
-          state.error = action.payload;
-        }
-      );
+      // =========================== Delete Occupation ===============================
+      .addCase(deleteOccupation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(deleteOccupation.fulfilled, (state, action) => {
+        state.loading = false;
+       
+        state.alldetails = state.alldetails.filter((d) => d._id !== action.payload);
+        state.success = true;
+        state.error = null;
+      })
+      .addCase(deleteOccupation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      });
   },
 });
 
-export const { resetSuccess } = LeadAreaSlice.actions;
-export default LeadAreaSlice.reducer;
+export const { resetSuccess, clearError, clearDetail } = LeadOccupationSlice.actions;
+export default LeadOccupationSlice.reducer;

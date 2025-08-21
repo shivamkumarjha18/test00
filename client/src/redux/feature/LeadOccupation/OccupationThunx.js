@@ -1,48 +1,83 @@
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
-// import axios from "../../../config/axios";
 import axios from "../../../config/axios";
 
-const API_URL = "/api/leadOccupation";
 
-export const fetchLeadOccupationDetails = createAsyncThunk(
-  "/leadOccupation/fetch",
-  async () => {
-    const response = await axios.get(`${API_URL}`);
-    // console.log(response.data, "all Data of lead Occupations");
-    return response.data;
-  }
-);
+const API_URL = "/api/occupation";
 
-export const fetchDetailsById = createAsyncThunk(
-  "/leadOccupation/fetchDetailsById",
-  async (id) => {
-    const response = await axios.get(`${API_URL}/${id}`);
-    return response.data;
-  }
-);
-
-export const createDetails = createAsyncThunk(
+// create Occupations
+export const createOccupation = createAsyncThunk(
   "/leadOccupation/create",
-  async (data) => {
-    const response = await axios.post(API_URL, data);
-    console.log(response, "Create Data of lead Occupations");
-    return response.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(API_URL,data);
+      console.log("Occupation created successfully:", response.data);
+      return response?.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || error.message || "Failed to create lead occupation"
+      );
+    }
   }
 );
 
-export const updateDetails = createAsyncThunk(
+
+// Get all occupations
+export const getAllOccupations = createAsyncThunk(
+  "/leadOccupation/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${API_URL}`);
+      return response?.data?.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || error.message || "Failed to fetch lead occupations"
+      );
+    }
+  }
+);
+
+// Get occupation by ID
+export const getOccupationById = createAsyncThunk(
+  "/leadOccupation/fetchDetailsById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${API_URL}/${id}`);
+      return response?.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || error.message || "Failed to fetch lead occupation details"
+      );
+    }
+  }
+);
+
+// Update occupation by ID
+export const updateOccupation = createAsyncThunk(
   "/leadOccupation/update",
-  async ({ id, data }) => {
-    const response = await axios.put(`${API_URL}/${id}`, data);
-
-    return response.data;
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/${id}`, data);
+      return response?.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || error.message || "Failed to update lead occupation"
+      );
+    }
   }
 );
 
-export const deleteDetails = createAsyncThunk(
+// Delete occupation by ID
+export const deleteOccupation = createAsyncThunk(
   "/leadOccupation/delete",
-  async (id) => {
-    await axios.delete(`${API_URL}/delete/${id}`);
-    return id;
+  async (id, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || error.message || "Failed to delete lead occupation"
+      );
+    }
   }
 );

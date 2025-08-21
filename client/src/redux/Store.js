@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import leadSourceReducer from "./feature/LeadSource/LeadSourceSlice";
 import LeadOccupationReducer from "./feature/LeadOccupation/OccupationSlice";
 import LeadAreaReducer from "./feature/LeadArea/AreaSlice";
@@ -21,6 +20,7 @@ import importantDocumentsReducer from "./feature/ImpDocument/DocumentSlice";
 import LeadCityReducer from "./feature/LeadCity/CitySlice";
 import clientReducer from "./feature/ClientRedux/ClientSlice";
 import KycReducer from "./feature/ClientRedux/KycSlice";
+
 
 
 export const store = configureStore({

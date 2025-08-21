@@ -7,12 +7,12 @@ import DashboardCards from "../Components/Dashbord/DashboardCards";
 import Composite from "../Components/Masters/Composite/Composite";
 import Area from "../Components/Masters/Leads/Area";
 import City from "../Components/Masters/Leads/City";
-import LeadOccupation from "../Components/Masters/Leads/LeadOccupation";
 import LeadSource from "../Components/Masters/Leads/LeadSource";
 import SubArea from "../Components/Masters/Leads/SubArea";
 import MarketingTask from "../Components/Masters/Marketing/MarketingTask";
 import ServicingTask from "../Components/Masters/Servicing/ServicingTask";
 import LeadType from "../Components/Masters/Leads/LeadType";
+import LeadOccupation from "../Components/Masters/Leads/LeadOccupation";
 import OccupationType from "../Components/Masters/Leads/OccupationType";
 
 // Customer Components

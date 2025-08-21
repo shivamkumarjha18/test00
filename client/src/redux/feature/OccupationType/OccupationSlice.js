@@ -1,88 +1,108 @@
+
+
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  fetchOccupations,
-  createOccupation,
-  updateOccupation,
-  deleteOccupation,
-} from "./OccupationThunx";
+import { createOccupationType, deleteOccupationType, getAllOccupationTypes, getOccupationTypeById, updateOccupationType } from "./OccupationThunx";
+
+
 
 const initialState = {
-  details: [],
+  alldetailsForTypes: [],
   loading: false,
   error: null,
+  singleDetailForType : null,
 };
 
 const OccupationTypeSlice = createSlice({
   name: "OccupationType",
   initialState,
-  reducers: {
-    // optional synchronous reducers if needed
-  },
+  reducers: {},
+
   extraReducers: (builder) => {
     builder
-      // fetchOccupations
-      .addCase(fetchOccupations.pending, (state) => {
+      // Fetch all occupation types
+      .addCase(getAllOccupationTypes.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchOccupations.fulfilled, (state, action) => {
+      .addCase(getAllOccupationTypes.fulfilled, (state, action) => {
         state.loading = false;
-        state.details = action.payload;
+        state.alldetailsForTypes = action.payload;
       })
-      .addCase(fetchOccupations.rejected, (state, action) => {
+      .addCase(getAllOccupationTypes.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch occupation types";
       })
-
-      // createOccupation
-      .addCase(createOccupation.pending, (state) => {
+      .addCase(createOccupationType.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createOccupation.fulfilled, (state, action) => {
+      .addCase(createOccupationType.fulfilled, (state, action) => {
         state.loading = false;
-        state.details.push(action.payload);
+        state.alldetailsForTypes.push(action.payload);
       })
-      .addCase(createOccupation.rejected, (state, action) => {
+      .addCase(createOccupationType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to create occupation type";
       })
 
-      // updateOccupation
-      .addCase(updateOccupation.pending, (state) => {
+      // Fetch single occupation type by ID
+      .addCase(getOccupationTypeById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateOccupation.fulfilled, (state, action) => {
+      .addCase(getOccupationTypeById.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.details.findIndex(
+        state.singleDetailForType = action.payload;
+        state.error = null;
+      })
+      .addCase(getOccupationTypeById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleDetailForType = null;
+      })
+      // Update occupation type
+        .addCase(updateOccupationType.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateOccupationType.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.alldetailsForTypes.findIndex(
           (item) => item._id === action.payload._id
         );
         if (index !== -1) {
-          state.details[index] = action.payload;
+          state.alldetailsForTypes[index] = action.payload;
         }
       })
-      .addCase(updateOccupation.rejected, (state, action) => {
+      .addCase(updateOccupationType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to update occupation type";
       })
 
-      // deleteOccupation
-      .addCase(deleteOccupation.pending, (state) => {
+
+      // Delete occupation type
+      .addCase(deleteOccupationType.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteOccupation.fulfilled, (state, action) => {
+      .addCase(deleteOccupationType.fulfilled, (state, action) => {
         state.loading = false;
-        state.details = state.details.filter(
+        state.alldetailsForTypes = state.alldetailsForTypes.filter(
           (item) => item._id !== action.payload
         );
       })
-      .addCase(deleteOccupation.rejected, (state, action) => {
+      .addCase(deleteOccupationType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to delete occupation type";
       });
   },
 });
+
+export const { 
+  resetSuccess, 
+  clearError, 
+  clearDetail, 
+  clearDeletedCount 
+} = OccupationTypeSlice.actions;
 
 export default OccupationTypeSlice.reducer;

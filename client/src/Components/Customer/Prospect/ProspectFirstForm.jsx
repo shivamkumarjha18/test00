@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { getProspectById} from "../../../redux/feature/ProspectRedux/ProspectThunx";
 import { fetchDetails } from "../../../redux/feature/LeadSource/LeadThunx";
-import { fetchOccupations } from "../../../redux/feature/OccupationType/OccupationThunx";
-import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
+import { getAllOccupationTypes } from "../../../redux/feature/OccupationType/OccupationThunx";
+import { getAllOccupations } from "../../../redux/feature/LeadOccupation/OccupationThunx";
 import { useNavigate, useParams } from "react-router-dom";
 import PersonalDetailsForm from "./PersonalDetailFormProspect";
 import FamilyMembersForm from "./FamilyMembersFormForProspect";
@@ -13,6 +13,7 @@ import FinancialInformationForm from "./FinancialInformationFormForProspect";
 import FuturePrioritiesForm from "./FuturePrioririesFormForProspect";
 import ProposedPlanForm from "./ProposedPlanFormForProspect";
 import { FaUser, FaUsers, FaRupeeSign, FaBullseye } from "react-icons/fa";
+
 
 const ProspectFirstForm = () => {
   const navigate = useNavigate();
@@ -24,9 +25,9 @@ const ProspectFirstForm = () => {
   const [prospectData, setProspectData] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchLeadOccupationDetails());
+    dispatch(getAllOccupationTypes());
+    dispatch(getAllOccupations());
     dispatch(fetchDetails());
-    dispatch(fetchOccupations());
 
     if (id) {
       setIsEdit(true);

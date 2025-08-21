@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { createProspect, updateProspectPersonalDetails } from "../../../redux/feature/ProspectRedux/ProspectThunx";
 import { fetchDetails } from "../../../redux/feature/LeadSource/LeadThunx";
-import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
-import { fetchOccupations } from "../../../redux/feature/OccupationType/OccupationThunx";
+import { getAllOccupations } from "../../../redux/feature/LeadOccupation/OccupationThunx";
+import { getAllOccupationTypes } from "../../../redux/feature/OccupationType/OccupationThunx";
 import { toast } from "react-toastify";
 
 const incomeOptions = [
@@ -67,18 +67,17 @@ const PersonalDetailsFormForProspect = ({ isEdit, prospectData, onProspectCreate
 
   const [formData, setFormData] = useState(initialFormState);
   const { leadsourceDetail } = useSelector((state) => state.leadsource);
-  const { details: occupationDetails } = useSelector((state) => state.leadOccupation);
-  const { details: occupationTypeDetails } = useSelector((state) => state.OccupationType);
+  const {  alldetails} = useSelector((state) => state.leadOccupation);
+  const {  alldetailsForTypes } = useSelector((state) => state.OccupationType);
 
   useEffect(() => {
     dispatch(fetchDetails());
-    dispatch(fetchLeadOccupationDetails());
-    dispatch(fetchOccupations());
+    dispatch(getAllOccupationTypes());
+    dispatch(getAllOccupations());
   }, [dispatch]);
 
   useEffect(() => {
     if (isEdit && prospectData) {
-      // console.log("cleint data from personal tab", clientData)
       setFormData(prospectData.personalDetails);
     } else {
       setFormData(initialFormState);
@@ -619,7 +618,7 @@ const PersonalDetailsFormForProspect = ({ isEdit, prospectData, onProspectCreate
               size="sm"
             >
               <option value="">Select Lead Occupation</option>
-              {occupationDetails?.map((item) => (
+              {alldetails && alldetails.map((item) => (
                 <option key={item._id} value={item.leadOccupation}>
                   {item.leadOccupation}
                 </option>
@@ -637,7 +636,7 @@ const PersonalDetailsFormForProspect = ({ isEdit, prospectData, onProspectCreate
               size="sm"
             >
               <option value="">Select Lead Occupation Type</option>
-              {occupationTypeDetails?.map((item) => (
+              {alldetailsForTypes && alldetailsForTypes.map((item) => (
                 <option key={item._id} value={item.occupationType}>
                   {item.occupationType}
                 </option>

@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { getSuspectById} from "../../../redux/feature/SuspectRedux/SuspectThunx";
 import { fetchDetails } from "../../../redux/feature/LeadSource/LeadThunx";
-import { fetchOccupations } from "../../../redux/feature/OccupationType/OccupationThunx";
-import { fetchLeadOccupationDetails } from "../../../redux/feature/LeadOccupation/OccupationThunx";
+import { getAllOccupationTypes} from "../../../redux/feature/OccupationType/OccupationThunx";
+import { getAllOccupations } from "../../../redux/feature/LeadOccupation/OccupationThunx";
 import { useNavigate, useParams } from "react-router-dom";
 import PersonalDetailsForm from "./PersonalDetailFormSuspect";
 import FamilyMembersForm from "./FamilyMembersFormSuspect";
@@ -24,9 +24,9 @@ const SuspectFirstForm = () => {
   const [suspectData, setSuspectData] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchLeadOccupationDetails());
+    dispatch(getAllOccupationTypes());
+    dispatch(getAllOccupations());
     dispatch(fetchDetails());
-    dispatch(fetchOccupations());
 
     if (id) {
       setIsEdit(true);

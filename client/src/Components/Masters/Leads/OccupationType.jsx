@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -10,28 +11,39 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createOccupation,
-  deleteOccupation,
-  fetchOccupations,
-  updateOccupation,
+  createOccupationType,
+  deleteOccupationType,
+  getAllOccupationTypes,
+  updateOccupationType,
 } from "../../../redux/feature/OccupationType/OccupationThunx";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OccupationType = () => {
   const dispatch = useDispatch();
-  const { details, loading } = useSelector((state) => state.OccupationType);
+
+  // FIX: The correct state key from your slice is `alldetailsForTypes`, not `allOccupationTypes`.
+  const { alldetailsForTypes, loading } = useSelector((state) => state.OccupationType);
+
   const [occupationType, setOccupationType] = useState("");
   const [editId, setEditId] = useState(null);
   const [editValue, setEditValue] = useState("");
 
   useEffect(() => {
-    dispatch(fetchOccupations());
+    dispatch(getAllOccupationTypes());
   }, [dispatch]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (occupationType.trim()) {
-      dispatch(createOccupation({ occupationType }));
-      setOccupationType("");
+      try {
+        await dispatch(createOccupationType({ occupationType })).unwrap();
+        toast.success("Occupation Type added successfully");
+        dispatch(getAllOccupationTypes());
+        setOccupationType("");
+      } catch (error) {
+        toast.error("Failed to add Occupation Type");
+      }
     }
   };
 
@@ -40,11 +52,17 @@ const OccupationType = () => {
     setEditValue(item.occupationType);
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = async (id) => {
     if (editValue.trim()) {
-      dispatch(updateOccupation({ id, data: { occupationType: editValue } }));
-      setEditId(null);
-      setEditValue("");
+      try {
+        await dispatch(updateOccupationType({ id, data: { occupationType: editValue } })).unwrap();
+        toast.success("Occupation Type updated successfully");
+        dispatch(getAllOccupationTypes());
+        setEditId(null);
+        setEditValue("");
+      } catch (error) {
+        toast.error("Failed to update Occupation Type");
+      }
     }
   };
 
@@ -53,11 +71,15 @@ const OccupationType = () => {
     setEditValue("");
   };
 
-  const handleDelete = (id) => {
-    if (
-      window.confirm("Are you sure you want to delete this Occupation Type?")
-    ) {
-      dispatch(deleteOccupation(id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this Occupation Type?")) {
+      try {
+        await dispatch(deleteOccupationType(id)).unwrap();
+        dispatch(getAllOccupationTypes());
+        toast.success("Occupation Type deleted successfully");
+      } catch (error) {
+        toast.error("Failed to delete Occupation Type");
+      }
     }
   };
 
@@ -78,9 +100,10 @@ const OccupationType = () => {
                     value={occupationType}
                     onChange={(e) => setOccupationType(e.target.value)}
                     required
+                    disabled={loading}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" disabled={loading}>
                   Add Occupation Type
                 </Button>
               </Form>
@@ -96,7 +119,7 @@ const OccupationType = () => {
                 <p>Loading...</p>
               ) : (
                 <ListGroup variant="flush">
-                  {details.map((item) => (
+                  {Array.isArray(alldetailsForTypes) && alldetailsForTypes.map((item) => (
                     <ListGroup.Item
                       key={item._id}
                       className="d-flex justify-content-between align-items-center"
@@ -108,12 +131,14 @@ const OccupationType = () => {
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
                             className="me-2"
+                            disabled={loading}
                           />
                           <Button
                             variant="success"
                             size="sm"
                             className="me-2"
                             onClick={() => handleUpdate(item._id)}
+                            disabled={loading}
                           >
                             Save
                           </Button>
@@ -121,6 +146,7 @@ const OccupationType = () => {
                             variant="secondary"
                             size="sm"
                             onClick={handleCancelEdit}
+                            disabled={loading}
                           >
                             Cancel
                           </Button>
@@ -134,6 +160,7 @@ const OccupationType = () => {
                               size="sm"
                               className="me-2"
                               onClick={() => handleEdit(item)}
+                              disabled={loading}
                             >
                               Edit
                             </Button>
@@ -141,6 +168,7 @@ const OccupationType = () => {
                               variant="outline-danger"
                               size="sm"
                               onClick={() => handleDelete(item._id)}
+                              disabled={loading}
                             >
                               Delete
                             </Button>

@@ -16,6 +16,9 @@ import {
   fetchLeadType,
   updateLeadType,
 } from "../../../redux/feature/LeadType/LeadTypeThunx";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const LeadType = () => {
   const dispatch = useDispatch();
@@ -28,37 +31,67 @@ const LeadType = () => {
     dispatch(fetchLeadType());
   }, [dispatch]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (leadType.trim()) {
-      dispatch(createLeadType({ leadType }));
-      setLeadType("");
-    }
-  };
+
+
 
   const handleEdit = (item) => {
     setEditId(item._id);
     setEditValue(item.leadType);
   };
 
-  const handleUpdate = (id) => {
-    if (editValue.trim()) {
-      dispatch(updateLeadType({ id, data: { leadType: editValue } }));
-      setEditId(null);
-      setEditValue("");
-    }
-  };
+
+
 
   const handleCancelEdit = () => {
     setEditId(null);
     setEditValue("");
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this Type?")) {
-      dispatch(deleteLeadType(id));
+ 
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (leadType.trim()) {
+    const result = await dispatch(createLeadType({ leadType }));
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success("Lead Type added successfully!");
+      setLeadType("");
+      await dispatch(fetchLeadType());
+    } else {
+      toast.error("Failed to add Lead Type.");
     }
-  };
+  }
+};
+
+
+
+
+ const handleUpdate = async (id) => {
+  if (editValue.trim()) {
+    const result = await dispatch(updateLeadType({ id, data: { leadType: editValue } }));
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success("Lead Type updated successfully!");
+      await dispatch(fetchLeadType());
+    } else {
+      toast.error("Failed to update Lead Type.");
+    }
+    setEditId(null);
+    setEditValue("");
+  }
+};
+
+
+  const handleDelete = async (id) => {
+  if (window.confirm("Are you sure you want to delete this Type?")) {
+    const result = await dispatch(deleteLeadType(id));
+    if (result.meta.requestStatus === "fulfilled") {
+      await dispatch(fetchLeadType());
+      toast.success("Lead Type deleted successfully!");
+    } else {
+      toast.error("Failed to delete Lead Type.");
+    }
+  }
+};
+
 
   return (
     <Container fluid className="container mt-4">

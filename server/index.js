@@ -64,8 +64,8 @@ app.use("/api/leadsubarea",         LeadSubAreaRoute);
 app.use("/api/leadcity",            LeadCityRoute);
 app.use("/api/leadType",            LeadTypeRoute);
 app.use("/api/leadSource",          LeadSourceRoute);
-app.use("/api/leadOccupation",      LeadOccupationRoute);
-app.use("/api/occupation-types",    OccupationTypeRoute);
+app.use("/api/occupation/types",    OccupationTypeRoute);
+app.use("/api/occupation",      LeadOccupationRoute);
 
 
 
