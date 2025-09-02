@@ -186,11 +186,12 @@ const Navbarfristn = () => {
                     {/* Task Master */}
                     <div className="col-md-4">
                       <h6 className="text-danger">Suspect</h6>
-                      <Dropdown.Item as={Link} to="/suspect">
-                        Suspect List
-                      </Dropdown.Item>
+                      
                       <Dropdown.Item as={Link} to="/suspect/add">
                         Add Suspect
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/suspect">
+                        Suspect List
                       </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/import-lead">
                         Import Lead
@@ -198,22 +199,24 @@ const Navbarfristn = () => {
                     </div>
                     <div className="col-md-4">
                       <h6 className="text-danger">Prospect</h6>
+                        <Dropdown.Item as={Link} to="/prospect/add">
+                        Add Prospect
+                      </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/prospect">
                         Prospect List
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/prospect/add">
-                        Add Prospect
-                      </Dropdown.Item>
+                    
                     </div>
 
                     <div className="col-md-4">
                       <h6 className="text-danger">Customer</h6>
+                            <Dropdown.Item as={Link} to="/client/add">
+                        Add Client
+                      </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/client">
                         Client List
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/client/add">
-                        Add Client
-                      </Dropdown.Item>
+                
                      
                     </div>
 

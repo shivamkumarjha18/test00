@@ -31,7 +31,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {getClientById } from "../../../redux/feature/ClientRedux/ClientThunx";
 import TasksTab from "../TaskTab";
 
-const CustomerDetail = () => {
+const  CustomerDetail = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [checklists, setChecklists] = useState([{ name: "", file: null }]);
   const [textChecklists, setTextChecklists] = useState([""]);
@@ -900,7 +900,7 @@ const CustomerDetail = () => {
       </span>
     </div>
 
-    {userData?.proposedPlan && userData?.proposedPlan?.length > 0 ? (
+     {/* userData?.proposedPlan && userData?.proposedPlan?.length > 0 ? (
       <>
         <div className="row">
           {userData?.proposedPlan?.map((plan, index) => {
@@ -958,7 +958,72 @@ const CustomerDetail = () => {
           })}
         </div>
       </>
-    ) : (
+    ) */} 
+     {userData?.proposedPlan && userData?.proposedPlan?.length > 0 ? (
+  <>
+    <div className="row">
+         {console.log(userData)}
+      {console.log(userData?.proposedPlan)}
+      {userData?.proposedPlan?.map((plan, index) => {
+        return (
+          <div className="col-lg-6 col-xl-4 mb-4" key={index}>
+            <div className="card h-100 shadow-sm border-0 position-relative overflow-hidden">
+              <div className="card-header bg-gradient-primary text-white border-0 py-3 badge bg-info text-dark">
+                <div className="d-flex justify-content-between align-items-center ">
+                  <h6 className="mb-0 fw-bold">
+                    <i className="bi bi-file-earmark-text me-2"></i>
+                    Plan {index + 1}
+                  </h6>
+                </div>
+              </div>
+              
+              <div className="card-body p-4">
+                <div className="row g-3">
+                  <div className="col-12">
+                    <div className="p-3 bg-light rounded-3">
+                      <small className="text-muted fw-medium">Created On</small>
+                      <div className="fw-bold text-dark">{formatDate(plan?.createdDate || "N/A")}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="col-12">
+                    <div className="p-3 bg-light rounded-3">
+                      <small className="text-muted fw-medium">Member Name</small>
+                      <div className="fw-bold text-dark">{plan?.memberName || 'N/A'}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="col-12">
+                    <div className="p-3 bg-light rounded-3">
+                      <small className="text-muted fw-medium">Financial Product</small>
+                      <div className="fw-bold text-dark">{plan?.financialProduct || 'N/A'}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="col-12">
+                    <div className="p-3 bg-light rounded-3">
+                      <small className="text-muted fw-medium">Plan Name</small>
+                      <div className="fw-bold text-dark">{plan?.planName || 'N/A'}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <button
+                    className={`btn ${plan?.status === "Accepted" ? "btn-success" : plan?.status === "Pending" ? "btn-warning" : "btn-secondary"} w-100`}
+                    disabled
+                  >
+                    {plan?.status || "proposed"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </>
+
+): (
       <div className="text-center py-5">
         <div className="mb-4">
           <i className="bi bi-inbox display-1 text-muted"></i>
