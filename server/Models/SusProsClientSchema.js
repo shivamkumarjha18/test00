@@ -334,7 +334,8 @@ const proposedPlanSchema = new mongoose.Schema({
   financialProduct: { type: String, required: true },
   financialCompany: { type: String, required: true },
   planName: { type: String, required: true },
-  documents: { type: [String] },
+  documents: { type: [String]  },
+  status:{type:String}
 });
 
 const personalDetailsSchema = new mongoose.Schema({
