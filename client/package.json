@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "postbuild": "cp -r dist/* .",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest"

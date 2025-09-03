@@ -20,7 +20,13 @@ function DisplayClient() {
   }, [dispatch]);
 
   useEffect(() => {
-    const sortedClients = [...(clients || [])].sort(
+    // Safety check for clients array
+    if (!clients || !Array.isArray(clients)) {
+      setFilteredData([]);
+      return;
+    }
+
+    const sortedClients = [...clients].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
 

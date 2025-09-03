@@ -22,13 +22,11 @@ const initialState = {
   success: false,
   error: null,
   clientData: null,
-  familyMembers: null,
+  familyMembers: [],
   financialInfo: null,
   futurePriorities: null,
   proposedPlan: null,
-  clients: [],
   singleClient: null,
-  familyMembers : [],
 };
 
 
@@ -132,7 +130,8 @@ const clientSlice = createSlice({
       .addCase(getAllClients.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.clients = action.payload;
+        // Safety check for payload
+        state.clients = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(getAllClients.rejected, (state, action) => {
         state.loading = false;
