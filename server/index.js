@@ -13,7 +13,11 @@ const morgan = require("morgan");
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'https://test00-lemon.vercel.app', // Specific frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  credentials: true // Allow cookies/auth headers if needed
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));

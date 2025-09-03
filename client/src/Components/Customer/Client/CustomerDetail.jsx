@@ -698,7 +698,7 @@ const  CustomerDetail = () => {
                   <TabPanel>
                     <div className="tab-content">
 
-                      {userData?.familyMembers?.length > 0 ? <div className="family-grid">
+                      {/* {userData?.familyMembers?.length > 0 ? <div className="family-grid">
                         <h3>Family Members</h3>
                         {userData?.familyMembers
                           ?.filter(
@@ -747,7 +747,62 @@ const  CustomerDetail = () => {
                           ))}
 
 
-                      </div> : "No Family Members"}
+                      </div> : "No Family Members"} */
+
+                
+                 
+                      <div className="family-grid">
+   {console.log(userData?.familyMembers)} 
+  <h3>Family Members</h3>
+  {userData?.familyMembers
+    ?.filter(
+      (member) =>
+        member?.relation?.toLowerCase() !== "self"
+    )
+    .map((member, index) => (
+      <div
+        className="family-card"
+        key={`member-${index}`}
+      >
+        <div className="family-avatar">
+          {member?.name?.charAt(0) || "N"}
+        </div>
+        <div className="family-info">
+          <h3 className="mb-2 fw-semibold">
+            {member?.name}
+          </h3>
+
+          <p>
+            <strong>Relation:</strong> {member?.relation || "N/A"}
+          </p>
+
+          <p>
+            <strong>Age:</strong>{" "}
+            {member?.dobActual
+              ? `${calculateAge(
+                member.dobActual
+              )} years (${new Date(
+                member.dobActual
+              ).toLocaleDateString("en-GB")})`
+              : "N/A"}
+          </p>
+
+          <p>
+            <strong>Annual Income:</strong>{" "}
+            {member?.annualIncome || "N/A"}
+          </p>
+
+          <p>
+            <strong>Contact No:</strong> {member?.contactNo || "N/A"}
+          </p>
+
+          <span className="badge bg-info text-dark">
+            {member?.occupation || "Dependent"}
+          </span>
+        </div>
+      </div>
+    ))}
+</div>}
                     </div>
                   </TabPanel>
 
