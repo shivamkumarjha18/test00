@@ -44,6 +44,8 @@ const  CustomerDetail = () => {
   const [proposedPlans, setproposedPlans] = useState([])
 
 
+  console.log(userData)
+
   const handleOpenModal = (type) => {
     setModalType(type);
     setShowModal(true);
@@ -793,10 +795,10 @@ const  CustomerDetail = () => {
           </p>
 
           <p>
-            <strong>Contact No:</strong> {member?.contactNo || "N/A"}
+            <strong>Contact No:</strong> {member?.contact|| "N/A"}
           </p>
 
-          <span className="badge bg-info text-dark">
+          <span className="badge bg-info text-dark">   
             {member?.occupation || "Dependent"}
           </span>
         </div>
@@ -1063,12 +1065,17 @@ const  CustomerDetail = () => {
                   </div>
                 </div>
                 <div className="mt-3">
-                  <button
+                  {/* <button
                     className={`btn ${plan?.status === "Accepted" ? "btn-success" : plan?.status === "Pending" ? "btn-warning" : "btn-secondary"} w-100`}
                     disabled
                   >
                     {plan?.status || "proposed"}
-                  </button>
+                  </button> */}
+             <select name="select" id="select" class="border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+  <option value="proposed">Proposed</option>
+  <option class="text-green-600" value="accepted">Accepted</option>
+  <option class="text-yellow-600" value="pending">Pending</option>
+</select>
                 </div>
               </div>
             </div>
