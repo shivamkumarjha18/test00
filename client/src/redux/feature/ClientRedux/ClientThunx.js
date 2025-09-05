@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../config/axios";
 
-
 // 1. Create Client with Personal Details
 export const createClient = createAsyncThunk(
   'client/createClient',
@@ -17,10 +16,6 @@ export const createClient = createAsyncThunk(
     }
   }
 );
-
-
-
-
 
 // 2. Add Family Members
 export const addFamilyMember = createAsyncThunk(
@@ -38,9 +33,6 @@ export const addFamilyMember = createAsyncThunk(
   }
 );
 
-
-
-
 // 3. Add Financial Information
 export const addFinancialInfo = createAsyncThunk(
   'client/addFinancialInfo',
@@ -56,7 +48,6 @@ export const addFinancialInfo = createAsyncThunk(
     }
   }
 );
-
 
 // 4. Add Future Priorities and Needs
 export const addFuturePrioritiesAndNeeds = createAsyncThunk(
@@ -75,9 +66,6 @@ export const addFuturePrioritiesAndNeeds = createAsyncThunk(
   }
 );
 
-
-
-
 // 5. Add Proposed Financial Plan
 export const addProposedFinancialPlan = createAsyncThunk(
   'client/addProposedFinancialPlan',
@@ -89,7 +77,7 @@ export const addProposedFinancialPlan = createAsyncThunk(
         },
       });
       console.log("Add proposed plan successfully", response?.data);
-      return response?.data;
+      return response?.data; // yaha ek pura client ya updated plan object return hoga
     } catch (error) {
       return rejectWithValue(
         error?.response?.data?.message || error?.response?.data?.error || "An error occurred while adding the proposed financial plan."
@@ -98,9 +86,29 @@ export const addProposedFinancialPlan = createAsyncThunk(
   }
 );
 
+// 6. Update Proposed Plan Status
+export const updateProposedPlanStatus = createAsyncThunk(
+  'client/updateProposedPlanStatus',
+  async ({ clientId, planId, status }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `/api/client/update/proposedplan/status/${clientId}/${planId}`,
+        { status } // sending only status
+      );
 
+      console.log("Updated proposed plan status successfully", response?.data);
+      return response?.data; // backend se updated plan object aana chahiye
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        "An error occurred while updating the proposed plan status."
+      );
+    }
+  }
+);
 
-// 6: Get All Clients
+// 7. Get All Clients
 export const getAllClients = createAsyncThunk(
   'client/all',
   async (_, { rejectWithValue }) => {
@@ -110,17 +118,13 @@ export const getAllClients = createAsyncThunk(
       return response?.data?.clients
     } catch (error) {
       return rejectWithValue(
-        error?.response?.data?.error || "An error occurred while adding the proposed financial plan."
+        error?.response?.data?.error || "An error occurred while fetching clients."
       );
     }
   }
 );
 
-
-
-
-
-// 7: Get Client by Id
+// 8. Get Client by Id
 export const getClientById = createAsyncThunk(
   'client/id',
   async (id, { rejectWithValue }) => {
@@ -130,56 +134,45 @@ export const getClientById = createAsyncThunk(
       return response?.data;
     } catch (error) {
       return rejectWithValue(
-        error?.response?.data?.error || "An error occurred while adding the proposed financial plan."
+        error?.response?.data?.error || "An error occurred while fetching the client."
       );
     }
   }
 );
 
-
-
-
-
-
-// 8: Update Client Status
+// 9. Update Client Status
 export const updateCleintStatus = createAsyncThunk(
   'client/update/status',
   async ({ id, status }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/api/client/update/status/${id}`, {status});
+      const response = await axios.put(`/api/client/update/status/${id}`, { status });
       console.log("Update Client Status successfully", response?.data)
       return response?.data;
     } catch (error) {
       return rejectWithValue(
-        error?.response?.data?.error || "An error occurred while adding the proposed financial plan."
+        error?.response?.data?.error || "An error occurred while updating client status."
       );
     }
   }
 );
 
-
-
-
-
-
-// 9.update client personal Details
+// 10. Update client personal Details
 export const updateClientPersonalDetails = createAsyncThunk(
-  'client/update/personal/details', 
-  async({id, personalDetails}, {rejectWithValue}) => {
+  'client/update/personal/details',
+  async ({ id, personalDetails }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/api/client/update/personaldetails/${id}`, {personalDetails});
+      const response = await axios.put(`/api/client/update/personaldetails/${id}`, { personalDetails });
       console.log("Update Client Personal Details successfully", response?.data)
       return response?.data;
     } catch (error) {
-       return rejectWithValue(error?.response?.data?.error || "An error occured while updating the personal Details of the client.")
-
+      return rejectWithValue(
+        error?.response?.data?.error || "An error occurred while updating the personal details."
+      );
     }
   }
-)
+);
 
-
-
-// 10. Delete cleint by id
+// 11. Delete client by id
 export const deleteClientById = createAsyncThunk(
   'client/delete/client',
   async (id, { rejectWithValue }) => {
@@ -188,15 +181,14 @@ export const deleteClientById = createAsyncThunk(
       console.log("Delete Client successfully", response?.data)
       return response?.data;
     } catch (error) {
-          return rejectWithValue(error?.response?.data?.error || "An error occured while deleting a client.")
+      return rejectWithValue(
+        error?.response?.data?.error || "An error occurred while deleting a client."
+      );
     }
   }
-)
+);
 
-
-
-
-// 11 getAllFamilyMembers
+// 12. Get All Family Members
 export const getAllFamilyMembers = createAsyncThunk(
   "family/getAllFamilyMembers",
   async (id, { rejectWithValue }) => {
@@ -211,5 +203,3 @@ export const getAllFamilyMembers = createAsyncThunk(
     }
   }
 );
-
-

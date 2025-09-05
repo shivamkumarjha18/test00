@@ -11,9 +11,9 @@ import {
   updateCleintStatus,
   updateClientPersonalDetails,
   deleteClientById,
-  getAllFamilyMembers
+  getAllFamilyMembers,
+  updateProposedPlanStatus, // ✅ new thunk
 } from "./ClientThunx";
-
 
 const initialState = {
   clients: [],
@@ -25,14 +25,12 @@ const initialState = {
   familyMembers: [],
   financialInfo: null,
   futurePriorities: null,
-  proposedPlan: null,
+  proposedPlan: [],
   singleClient: null,
 };
 
-
-
 const clientSlice = createSlice({
-  name: 'client',
+  name: "client",
   initialState,
   reducers: {
     resetClientState: (state) => {
@@ -114,9 +112,53 @@ const clientSlice = createSlice({
       .addCase(addProposedFinancialPlan.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.proposedPlan = action.payload;
+
+        // naye plan ko array me add karo
+        if (Array.isArray(state.proposedPlan)) {
+          state.proposedPlan.push(action.payload);
+        } else {
+          state.proposedPlan = [action.payload];
+        }
+
+        // singleClient ke andar bhi update karo
+        if (state.singleClient) {
+          if (!Array.isArray(state.singleClient.proposedPlan)) {
+            state.singleClient.proposedPlan = [];
+          }
+          state.singleClient.proposedPlan.push(action.payload);
+        }
       })
       .addCase(addProposedFinancialPlan.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ✅ updateProposedPlanStatus
+      .addCase(updateProposedPlanStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateProposedPlanStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+
+        const updatedPlan = action.payload;
+        if (!updatedPlan?._id) return;
+
+        // update state.proposedPlan
+        state.proposedPlan = state.proposedPlan.map((plan) =>
+          plan._id === updatedPlan._id ? updatedPlan : plan
+        );
+
+        // agar singleClient ke andar bhi hai to update karo
+        if (state.singleClient && Array.isArray(state.singleClient.proposedPlan)) {
+          state.singleClient.proposedPlan = state.singleClient.proposedPlan.map(
+            (plan) => (plan._id === updatedPlan._id ? updatedPlan : plan)
+          );
+        }
+      })
+      .addCase(updateProposedPlanStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -130,7 +172,6 @@ const clientSlice = createSlice({
       .addCase(getAllClients.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        // Safety check for payload
         state.clients = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(getAllClients.rejected, (state, action) => {
@@ -148,6 +189,7 @@ const clientSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.singleClient = action.payload;
+        state.proposedPlan = action.payload?.proposedPlan || [];
       })
       .addCase(getClientById.rejected, (state, action) => {
         state.loading = false;
@@ -171,6 +213,8 @@ const clientSlice = createSlice({
         state.error = action.payload;
         state.singleClient = null;
       })
+
+      // updateClientPersonalDetails
       .addCase(updateClientPersonalDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -186,7 +230,8 @@ const clientSlice = createSlice({
         state.error = action.payload;
         state.singleClient = null;
       })
-      // delete client
+
+      // deleteClientById
       .addCase(deleteClientById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -196,28 +241,30 @@ const clientSlice = createSlice({
         state.loading = false;
         state.success = true;
         const deletedId = action.payload.id || action.payload._id;
-        state.clients = state.clients.filter(client => client._id !== deletedId);
+        state.clients = state.clients.filter(
+          (client) => client._id !== deletedId
+        );
       })
-    
       .addCase(deleteClientById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-
       })
-      .addCase(getAllFamilyMembers.pending, (state)=>{
+
+      // getAllFamilyMembers
+      .addCase(getAllFamilyMembers.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.success = false;
       })
-      .addCase(getAllFamilyMembers.fulfilled, (state, action)=>{
+      .addCase(getAllFamilyMembers.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.familyMembers = action.payload
+        state.familyMembers = action.payload;
       })
-      .addCase(getAllFamilyMembers.rejected, (state, action)=>{
+      .addCase(getAllFamilyMembers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 

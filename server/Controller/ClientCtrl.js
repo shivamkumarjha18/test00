@@ -475,6 +475,51 @@ exports.addProposedFinancialPlan = async (req, res) => {
   }
 };
 
+// update proposed financial plan status
+exports.updateProposedPlanStatus = async (req, res) => {
+  try {
+    const { clientId, planId } = req.params;
+    const { status } = req.body;
+
+    // Validate clientId & planId
+    if (!clientId || !planId) {
+      return res.status(400).json({ success: false, message: "Client ID and Plan ID are required" });
+    }
+
+    // Validate status
+    if (!status) {
+      return res.status(400).json({ success: false, message: "Status is required" });
+    }
+
+    // Find client
+    const client = await clientModel.findById(clientId);
+    if (!client) {
+      return res.status(404).json({ success: false, message: "Client not found" });
+    }
+
+    // Find the proposed plan inside client's proposedPlan array
+    const plan = client.proposedPlan.id(planId);
+    if (!plan) {
+      return res.status(404).json({ success: false, message: "Proposed plan not found" });
+    }
+
+    // Update the status
+    plan.status = status;
+
+    // Save the client document
+    await client.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Proposed plan status updated successfully",
+      updatedPlan: plan
+    });
+
+  } catch (error) {
+    console.error("Error updating proposed plan status:", error);
+    res.status(500).json({ error: "Server error", details: error.message });
+  }
+};
 
 
 

@@ -29,6 +29,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {getClientById } from "../../../redux/feature/ClientRedux/ClientThunx";
+import { updateProposedPlanStatus } from "../../../redux/feature/ClientRedux/ClientThunx";
 import TasksTab from "../TaskTab";
 
 const  CustomerDetail = () => {
@@ -754,6 +755,7 @@ const  CustomerDetail = () => {
                 
                  
                       <div className="family-grid">
+                        {console.log(userData)}
    {console.log(userData?.familyMembers)} 
   <h3>Family Members</h3>
   {userData?.familyMembers
@@ -1016,7 +1018,7 @@ const  CustomerDetail = () => {
         </div>
       </>
     ) */} 
-     {userData?.proposedPlan && userData?.proposedPlan?.length > 0 ? (
+    {userData?.proposedPlan && userData?.proposedPlan?.length > 0 ? (
   <>
     <div className="row">
          {console.log(userData)}
@@ -1064,19 +1066,72 @@ const  CustomerDetail = () => {
                     </div>
                   </div>
                 </div>
-                <div className="mt-3">
-                  {/* <button
-                    className={`btn ${plan?.status === "Accepted" ? "btn-success" : plan?.status === "Pending" ? "btn-warning" : "btn-secondary"} w-100`}
-                    disabled
-                  >
-                    {plan?.status || "proposed"}
-                  </button> */}
-             <select name="select" id="select" class="border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-  <option value="proposed">Proposed</option>
-  <option class="text-green-600" value="accepted">Accepted</option>
-  <option class="text-yellow-600" value="pending">Pending</option>
-</select>
-                </div>
+              <div className="mt-3 space-y-3">
+  {/* Dropdown */}
+  <div className="relative">
+    <select name="select" id="select" className="custom-select">
+      <option value="proposed">Proposed</option>
+      <option value="accepted">Accepted</option>
+      <option value="pending">Pending</option>
+    </select>
+
+    {/* dropdown arrow */}
+    <span className="custom-arrow">▼</span>
+  </div>
+
+  {/* Save button */}
+  <button className="custom-btn">Save</button>
+
+  <style>{`
+    .custom-select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db; /* gray-300 */
+      border-radius: 12px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      background: #fff;
+      color: #1f2937; /* gray-800 */
+      font-size: 14px;
+      appearance: none;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .custom-select:focus {
+      border-color: #3b82f6; /* blue-500 */
+      box-shadow: 0 0 0 2px #93c5fd;
+    }
+
+    .custom-arrow {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #6b7280; /* gray-500 */
+    }
+
+    .custom-btn {
+      width: 100%;
+      padding: 10px 16px;
+      margin-top: 12px;
+      background: #2563eb; /* blue-600 */
+      color: #fff;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .custom-btn:hover {
+      background: #1d4ed8; /* blue-700 */
+    }
+  `}</style>
+</div>
+
+
               </div>
             </div>
           </div>
@@ -1085,7 +1140,7 @@ const  CustomerDetail = () => {
     </div>
   </>
 
-): (
+ ): (
       <div className="text-center py-5">
         <div className="mb-4">
           <i className="bi bi-inbox display-1 text-muted"></i>

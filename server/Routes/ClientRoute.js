@@ -30,6 +30,13 @@ router.put("/add/futurepriorities/:clientId", ClientCtrl.addFuturePrioritiesAndN
 router.put("/add/proposedplan/:clientId", upload.array("documents"), ClientCtrl.addProposedFinancialPlan)
 
 
+// update proposed financial plan status
+router.put(
+  "/proposedplan/:clientId/:planId/status",
+  ClientCtrl.updateProposedPlanStatus
+);
+
+
 
 // update personal details of the client
 router.put("/update/personaldetails/:clientId", ClientCtrl.updatePersonalDetails);

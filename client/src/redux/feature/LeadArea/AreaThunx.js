@@ -19,11 +19,12 @@ export const createArea = createAsyncThunk(
   "leadArea/create",
   async (areaData, { rejectWithValue }) => {
     try {
-      // Transform data to match backend schema
+      // ✅ Correct field mapping
       const payload = {
         name: areaData.name,
-        shortcode: areaData.code,
-        pincode: areaData.pin,
+        shortcode: areaData.shortcode,
+        pincode: areaData.pincode,
+        city: areaData.city,
       };
 
       const response = await axios.post(API_URL, payload);
@@ -38,11 +39,11 @@ export const updateArea = createAsyncThunk(
   "leadArea/update",
   async ({ id, areaData }, { rejectWithValue }) => {
     try {
-      // Transform data to match backend schema
       const payload = {
         name: areaData.name,
-        shortcode: areaData.code,
-        pincode: areaData.pin,
+        shortcode: areaData.shortcode,
+        pincode: areaData.pincode,
+        city: areaData.city,
       };
       const response = await axios.put(`${API_URL}/${id}`, payload);
       return response.data;

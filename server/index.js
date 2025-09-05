@@ -63,6 +63,7 @@ app.use("/api/important-documents", ImpDocumentRoute);
 app.use("/api/suspect",         SuspectRoute);
 app.use("/api/prospect",        ProspectRoute);
 app.use("/api/client",              ClientRoute);
+
 app.use("/api/leadarea",            LeadAreaRoute);
 app.use("/api/leadsubarea",         LeadSubAreaRoute);
 app.use("/api/leadcity",            LeadCityRoute);

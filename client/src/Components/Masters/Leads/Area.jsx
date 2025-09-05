@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PencilFill, TrashFill } from "react-bootstrap-icons";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   fetchAreas,
   createArea,
   updateArea,
   deleteArea,
-  // resetAreaStatus,
 } from "../../../redux/feature/LeadArea/AreaThunx";
 
 const Area = () => {
@@ -19,22 +18,25 @@ const Area = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    code: "",
-    pin: "",
+    shortcode: "",
+    pincode: "",
+    city: "",
   });
 
   const [editId, setEditId] = useState(null);
 
+  // ✅ Fetch areas on load
   useEffect(() => {
     dispatch(fetchAreas());
   }, [dispatch]);
 
+  // ✅ Reset form on success
   useEffect(() => {
     if (success) {
-      setFormData({ name: "", code: "", pin: "" });
+      setFormData({ name: "", shortcode: "", pincode: "", city: "" });
       setEditId(null);
     }
-  }, [success, dispatch]);
+  }, [success]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,15 +46,18 @@ const Area = () => {
     }));
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.code || !formData.pin) return;
+    const { name, shortcode, pincode, city } = formData;
+
+    if (!name || !shortcode || !pincode || !city) {
+      toast.error("All fields are required!");
+      return;
+    }
 
     if (editId) {
       const result = await dispatch(updateArea({ id: editId, areaData: formData }));
       if (result.meta.requestStatus === "fulfilled") {
-        setFormData({ name: "", code: "", pin: "" });
-        setEditId(null);
         toast.success("Area updated successfully!");
       } else {
         toast.error("Failed to update area. Please try again.");
@@ -60,39 +65,33 @@ const Area = () => {
     } else {
       const result = await dispatch(createArea(formData));
       if (result.meta.requestStatus === "fulfilled") {
-        setFormData({ name: "", code: "", pin: "" });
-        setEditId(null);
         toast.success("Area added successfully!");
       } else {
         toast.error("Failed to add area. Please try again.");
       }
-
     }
   };
 
   const handleEdit = (area) => {
     setFormData({
       name: area.name,
-      code: area.shortcode,
-      pin: area.pincode,
+      shortcode: area.shortcode,
+      pincode: area.pincode,
+      city: area.city,
     });
     setEditId(area._id);
   };
 
-
- 
   const handleDelete = async (id) => {
-  if (window.confirm("Are you sure you want to delete this area?")) {
-    const result = await dispatch(deleteArea(id));
-    if (result.meta.requestStatus === "fulfilled") {
-      toast.success("Area deleted successfully!");
-    } else {
-      toast.error("Failed to delete area. Please try again.");
+    if (window.confirm("Are you sure you want to delete this area?")) {
+      const result = await dispatch(deleteArea(id));
+      if (result.meta.requestStatus === "fulfilled") {
+        toast.success("Area deleted successfully!");
+      } else {
+        toast.error("Failed to delete area. Please try again.");
+      }
     }
-  }
-};
-
-  
+  };
 
   if (loading && !areas.length) {
     return <div className="text-center mt-4">Loading areas...</div>;
@@ -133,8 +132,8 @@ const Area = () => {
                   <input
                     type="text"
                     className="form-control"
-                    name="code"
-                    value={formData.code}
+                    name="shortcode"
+                    value={formData.shortcode}
                     onChange={handleChange}
                     placeholder="Enter Zone Code"
                     required
@@ -146,10 +145,23 @@ const Area = () => {
                   <input
                     type="text"
                     className="form-control"
-                    name="pin"
-                    value={formData.pin}
+                    name="pincode"
+                    value={formData.pincode}
                     onChange={handleChange}
                     placeholder="Enter Postal Code"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">City</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    placeholder="Enter City"
                     required
                     disabled={loading}
                   />
@@ -166,7 +178,7 @@ const Area = () => {
                     type="button"
                     className="btn btn-secondary ms-2"
                     onClick={() => {
-                      setFormData({ name: "", code: "", pin: "" });
+                      setFormData({ name: "", shortcode: "", pincode: "", city: "" });
                       setEditId(null);
                     }}
                     disabled={loading}
@@ -194,8 +206,7 @@ const Area = () => {
                       className="list-group-item d-flex justify-content-between align-items-center"
                     >
                       <div>
-                        <strong>{area.name}</strong> ({area.shortcode}) -{" "}
-                        {area.pincode}
+                        <strong>{area.name}</strong> ({area.shortcode}) - {area.pincode}, {area.city}
                       </div>
                       <div>
                         <button
